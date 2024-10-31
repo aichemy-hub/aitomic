@@ -1,10 +1,10 @@
-.. millie documentation master file, created by
+.. aichemy documentation master file, created by
    sphinx-quickstart on Thu Oct 19 15:55:32 2023.
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to millie's documentation!
-==================================
+Welcome to aichemy's documentation!
+===================================
 
 .. toctree::
   :hidden:

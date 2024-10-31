@@ -1,11 +1,11 @@
 """A foo example."""
 
-import millie
+import aichemy
 
 
 def main() -> None:
     """Run the example."""
-    print(millie.foo(12))  # noqa: T201
+    print(aichemy.foo(12))  # noqa: T201
 
 
 if __name__ == "__main__":
