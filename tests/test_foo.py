@@ -1,5 +1,5 @@
-import millie
+import aichemy
 
 
 def test_foo() -> None:
-    assert millie.foo(12) == "Hello, World! Also: 12"
+    assert aichemy.foo(12) == "Hello, World! Also: 12"
