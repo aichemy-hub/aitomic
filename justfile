@@ -5,7 +5,7 @@ default:
 # Build docs.
 docs:
   rm -rf docs/build docs/source/_autosummary
-  make -C docs html
+  uv run make -C docs html
   echo Docs are in $PWD/docs/build/html/index.html
 
 # Do a dev install.
@@ -20,31 +20,31 @@ check:
   trap error=1 ERR
 
   echo
-  (set -x; ruff check src/ tests/ docs/source/ examples/ )
+  (set -x; uv run ruff check src/ tests/ docs/source/ examples/ )
   test $? = 0
 
   echo
-  ( set -x; ruff format --check src/ tests/ docs/source/ examples/ )
+  ( set -x; uv run ruff format --check src/ tests/ docs/source/ examples/ )
   test $? = 0
 
   echo
-  ( set -x; mypy src/ tests/ docs/source/ examples/ )
+  ( set -x; uv run mypy src/ tests/ docs/source/ examples/ )
   test $? = 0
 
   echo
-  ( set -x; pytest --cov=src --cov-report term-missing )
+  ( set -x; uv run pytest --cov=src --cov-report term-missing )
   test $? = 0
 
   echo
-  ( set -x; make -C docs doctest )
+  ( set -x; uv run make -C docs doctest )
   test $? = 0
 
   test $error = 0
 
 # Auto-fix code issues.
 fix:
-  ruff format src/ tests/ docs/source/ examples/
-  ruff check --fix src/ tests/ docs/source/ examples/
+  uv run ruff format src/ tests/ docs/source/ examples/
+  uv run ruff check --fix src/ tests/ docs/source/ examples/
 
 # Build a release.
 build:
