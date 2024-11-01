@@ -173,6 +173,10 @@ class AutoExperiments:
         """Iterate over the experiments."""
         return iter(self.inner)
 
+    def __len__(self) -> int:
+        """Get the number of experiments."""
+        return len(self.inner)
+
 
 @dataclass(slots=True, kw_only=True)
 class AutoExperimentQuery:
