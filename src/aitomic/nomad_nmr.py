@@ -43,6 +43,7 @@ Examples:
     .. testcode:: downloading-experiment-data
 
         from aitomic import nomad_nmr
+        from pathlib import Path
 
         client = nomad_nmr.Client.login(
             "http://demo.nomad-nmr.uk",
@@ -50,7 +51,7 @@ Examples:
             password="dem0User",
         )
         experiments = client.auto_experiments()
-        with open("experiments.zip", "wb") as f:
+        with Path("experiments.zip").open("wb") as f:
             f.write(experiments.download())
 
     .. testcleanup:: downloading-experiment-data
@@ -86,6 +87,7 @@ Examples:
     .. testcode:: downloading-experiment-data-query
 
         from aitomic import nomad_nmr
+        from pathlib import Path
 
         client = nomad_nmr.Client.login(
             "http://demo.nomad-nmr.uk",
@@ -98,7 +100,7 @@ Examples:
                 title=["test", "test-1"]
             )
         )
-        with open("experiments.zip", "wb") as f:
+        with Path("experiments.zip").open("wb") as f:
             f.write(experiments.download())
 """
 
