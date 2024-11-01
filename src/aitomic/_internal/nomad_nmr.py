@@ -60,15 +60,15 @@ class AuthToken:
 class AutoExperimentResponse(BaseModel):
     id: str
     dataset_name: str = Field(alias="datasetName")
-    experiment_number: str = Field(alias="experimentNo")
+    experiment_number: str = Field(alias="expNo")
     parameter_set: str = Field(alias="parameterSet")
-    parameters: str | None
+    parameters: str | None = None
     title: str
     instrument: str
     user: str
     group: str
-    sovlent: str
-    submitted_at: datetime = Field(alias="submittedAt")
+    solvent: str
+    submitted_at: datetime | None = Field(default=None, alias="submittedAt")
 
     def to_auto_experiment(self) -> "AutoExperiment":
         return AutoExperiment(
@@ -81,7 +81,7 @@ class AutoExperimentResponse(BaseModel):
             instrument=self.instrument,
             user=self.user,
             group=self.group,
-            sovlent=self.sovlent,
+            solvent=self.solvent,
             submitted_at=self.submitted_at,
         )
 
@@ -100,7 +100,7 @@ class AutoExperiment:
         instrument: The id of the instrument used to run the experiment.
         user: The id of the user who ran the experiment.
         group: The id of the group the experiment belongs to.
-        sovlent: The id of the solvent used in the experiment.
+        solvent: The id of the solvent used in the experiment.
         submitted_at: The time the experiment was submitted.
     """
 
@@ -122,9 +122,9 @@ class AutoExperiment:
     """The id of the user who ran the experiment."""
     group: str
     """The id of the group the experiment belongs to."""
-    sovlent: str
+    solvent: str
     """The id of the solvent used in the experiment."""
-    submitted_at: datetime
+    submitted_at: datetime | None
     """The time the experiment was submitted."""
 
 
@@ -349,9 +349,7 @@ class Client:
             timeout=self.timeout,
         )
         response.raise_for_status()
-        from pprint import pprint
 
-        pprint(response.json())
         return AutoExperiments(
             client=self,
             inner=[
