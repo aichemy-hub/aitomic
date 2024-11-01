@@ -1,5 +1,5 @@
 from collections.abc import Iterator
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 
 import requests
@@ -333,7 +333,31 @@ class Client:
         Raises:
             requests.HTTPError: If the request fails.
         """
+        if query is None:
+            params = {}
+        else:
+            params = {
+                key: value
+                for key, value in asdict(query).items()
+                if value is not None
+            }
 
         response = requests.get(
-            f"{self.url}/api/v2/auto-experiments", params={}
+            f"{self.url}/api/v2/auto-experiments",
+            params=params,
+            headers={"Authorization": f"Bearer {self.auth_token.token}"},
+            timeout=self.timeout,
+        )
+        response.raise_for_status()
+        from pprint import pprint
+
+        pprint(response.json())
+        return AutoExperiments(
+            client=self,
+            inner=[
+                AutoExperimentResponse.model_validate(
+                    experiment
+                ).to_auto_experiment()
+                for experiment in response.json()
+            ],
         )
