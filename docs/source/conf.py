@@ -6,7 +6,7 @@
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = "aichemy"
+project = "aitomic"
 project_copyright = "2023, AIchemy Hub"
 author = "Lukas Turcani"
 

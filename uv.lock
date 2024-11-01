@@ -2,8 +2,8 @@ version = 1
 requires-python = ">=3.12"
 
 [[package]]
-name = "aichemy"
-version = "0.1.dev3+g1687487.d20241031"
+name = "aitomic"
+version = "0.1.dev6+gb5b84a6.d20241101"
 source = { editable = "." }
 
 [package.optional-dependencies]

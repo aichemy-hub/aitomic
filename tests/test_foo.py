@@ -1,5 +1,5 @@
-import aichemy
+import aitomic
 
 
 def test_foo() -> None:
-    assert aichemy.foo(12) == "Hello, World! Also: 12"
+    assert aitomic.foo(12) == "Hello, World! Also: 12"
