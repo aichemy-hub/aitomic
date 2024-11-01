@@ -16,8 +16,7 @@ def main() -> None:
         password=args.password,
     )
     experiments = client.auto_experiments()
-    with args.download_path.open("wb") as f:
-        f.write(experiments.download())
+    args.download_path.write_bytes(experiments.download())
 
 
 def _parse_args() -> argparse.Namespace:

@@ -51,8 +51,7 @@ Examples:
             password="dem0User",
         )
         experiments = client.auto_experiments()
-        with Path("experiments.zip").open("wb") as f:
-            f.write(experiments.download())
+        Path("experiments.zip").write_bytes(experiments.download())
 
     .. testcleanup:: downloading-experiment-data
 
@@ -100,8 +99,7 @@ Examples:
                 title=["test", "test-1"]
             )
         )
-        with Path("experiments.zip").open("wb") as f:
-            f.write(experiments.download())
+        Path("experiments.zip").write_bytes(experiments.download())
 """
 
 from aitomic._internal.nomad_nmr import (
