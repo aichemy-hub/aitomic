@@ -27,6 +27,7 @@ def test_download_all() -> None:
                 "2106241100-10-2-test4-1.json",
             ]
         )
+        assert len(experiments) == len(expected_files)
         with zipfile.ZipFile(f.name) as zip_file:
             files = sorted(zip_file.namelist())
             assert files == expected_files
