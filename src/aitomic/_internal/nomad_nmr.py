@@ -315,7 +315,7 @@ class Client:
 
         """
         response_ = requests.post(
-            f"{self.url}/api/v2/auth/token",
+            f"{self.url}/api/auth/login",
             json={
                 "username": self.username,
                 "password": self.password,
@@ -323,7 +323,7 @@ class Client:
             timeout=self.timeout,
         )
         response_.raise_for_status()
-        response = AuthResponse.model_validate(response_)
+        response = AuthResponse.model_validate(response_.json())
         self.auth_token = AuthToken(
             expires_at=datetime.now(UTC)
             + timedelta(seconds=response.expires_in),
