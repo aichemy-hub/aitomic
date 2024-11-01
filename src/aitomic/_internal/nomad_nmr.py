@@ -1,3 +1,4 @@
+from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
@@ -50,6 +51,30 @@ class AuthToken:
         return self.expires_at < datetime.now(UTC)
 
 
+@dataclass(slots=True, kw_only=True)
+class AutoExperiment:
+    """An experiment."""
+
+
+@dataclass(slots=True)
+class AutoExperiments:
+    """A collection of experiments."""
+
+    inner: list[AutoExperiment]
+
+    def download(self) -> bytes:
+        """Download the experiments into a zip file."""
+
+    def __iter__(self) -> Iterator[AutoExperiment]:
+        """Iterate over the experiments."""
+        return iter(self.inner)
+
+
+@dataclass(slots=True, kw_only=True)
+class AutoExperimentQuery:
+    """Query for auto experiments."""
+
+
 @dataclass(slots=True)
 class Client:
     """Client for interacting with a NOMAD server.
@@ -93,6 +118,7 @@ class Client:
             timeout=5,
         )
         response.raise_for_status()
+        print(response.json())
 
     def auth(self) -> None:
         """Make the client use a new authentication token.
@@ -104,3 +130,8 @@ class Client:
             requests.HTTPError: If the authentication request fails.
 
         """
+
+    def auto_experiments(
+        self, query: AutoExperimentQuery | None = None
+    ) -> AutoExperiments:
+        pass
