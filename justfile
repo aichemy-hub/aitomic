@@ -32,7 +32,7 @@ check:
   test $? = 0
 
   echo
-  ( set -x; uv run pytest --cov=src --cov-report term-missing )
+  ( set -x; uv run pytest )
   test $? = 0
 
   echo
