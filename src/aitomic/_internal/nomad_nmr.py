@@ -160,7 +160,10 @@ class AutoExperiments:
         """
         response = requests.post(
             f"{self.client.url}/api/v2/auto-experiments/download",
-            params={"id": [experiment.id for experiment in self]},
+            params={"id": ",".join(experiment.id for experiment in self)},
+            headers={
+                "Authorization": f"Bearer {self.client.auth_token.token}"
+            },
             timeout=self.client.timeout,
         )
         response.raise_for_status()
@@ -222,6 +225,15 @@ class AutoExperimentQuery:
     """Skip the first ``offset`` experiments."""
     limit: int | None = None
     """Limit the number of experiments returned to ``limit``."""
+
+
+def to_query(query: AutoExperimentQuery) -> Iterator[tuple[str, str]]:
+    for key, value in asdict(query).items():
+        if value is not None:
+            if isinstance(value, list):
+                yield key, ",".join(value)
+            else:
+                yield key, value
 
 
 @dataclass(slots=True)
@@ -333,18 +345,9 @@ class Client:
         Raises:
             requests.HTTPError: If the request fails.
         """
-        if query is None:
-            params = {}
-        else:
-            params = {
-                key: value
-                for key, value in asdict(query).items()
-                if value is not None
-            }
-
         response = requests.get(
             f"{self.url}/api/v2/auto-experiments",
-            params=params,
+            params={} if query is None else dict(to_query(query)),
             headers={"Authorization": f"Bearer {self.auth_token.token}"},
             timeout=self.timeout,
         )
