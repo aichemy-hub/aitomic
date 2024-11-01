@@ -19,7 +19,7 @@ Examples:
 
     **Downloading experiment data**
 
-    .. testsetup::
+    .. testsetup:: downloading-experiment-data
 
         from aitomic import nomad_nmr
         import tempfile
@@ -33,14 +33,14 @@ Examples:
             def wrapper(url, username, password):
                 return func(
                     os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
-                    username=username,
-                    password=password,
+                    username="admin",
+                    password="foo",
                 )
             return wrapper
 
         nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
 
-    .. testcode::
+    .. testcode:: downloading-experiment-data
 
         from aitomic import nomad_nmr
 
@@ -53,7 +53,7 @@ Examples:
         with open("experiments.zip", "wb") as f:
             f.write(experiments.download())
 
-    .. testcleanup::
+    .. testcleanup:: downloading-experiment-data
 
         os.chdir(pwd)
 
@@ -62,7 +62,7 @@ Examples:
 
     **Downloading experiment data matching a query**
 
-    .. testsetup::
+    .. testsetup:: downloading-experiment-data-query
 
         from aitomic import nomad_nmr
         import tempfile
@@ -76,14 +76,14 @@ Examples:
             def wrapper(url, username, password):
                 return func(
                     os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
-                    username=username,
-                    password=password,
+                    username="admin",
+                    password="foo",
                 )
             return wrapper
 
         nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
 
-    .. testcode::
+    .. testcode:: downloading-experiment-data-query
 
         from aitomic import nomad_nmr
 
