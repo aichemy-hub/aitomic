@@ -1,10 +1,9 @@
 from collections.abc import Iterator
 from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
-from typing import NewType
 
 import requests
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ConfigDict
 
 
 class AuthResponse(BaseModel):
@@ -58,16 +57,60 @@ class AuthToken:
         return self.expires_at < datetime.now(UTC)
 
 
-class AutoExperiment(BaseModel):
-    """Data about an auto experiment stored in NOMAD."""
+class AutoExperimentResponse(BaseModel):
+    id: str
+    dataset_name: str = Field(alias="datasetName")
+    experiment_number: str = Field(alias="experimentNo")
+    parameter_set: str = Field(alias="parameterSet")
+    parameters: str | None
+    title: str
+    instrument: str
+    user: str
+    group: str
+    sovlent: str
+    submitted_at: datetime = Field(alias="submittedAt")
+
+    def to_auto_experiment(self) -> "AutoExperiment":
+        return AutoExperiment(
+            id=self.id,
+            dataset_name=self.dataset_name,
+            experiment_number=self.experiment_number,
+            parameter_set=self.parameter_set,
+            parameters=self.parameters,
+            title=self.title,
+            instrument=self.instrument,
+            user=self.user,
+            group=self.group,
+            sovlent=self.sovlent,
+            submitted_at=self.submitted_at,
+        )
+
+
+@dataclass(slots=True, kw_only=True)
+class AutoExperiment:
+    """Data about an auto experiment stored in NOMAD.
+
+    Parameters:
+        id: The experiment ID.
+        dataset_name: The name of the dataset the experiment belongs to.
+        experiment_number: The experiment number.
+        parameter_set: The parameter set used to run the experiment.
+        parameters: The parameters used to run the experiment.
+        title: The title of the experiment.
+        instrument: The id of the instrument used to run the experiment.
+        user: The id of the user who ran the experiment.
+        group: The id of the group the experiment belongs to.
+        sovlent: The id of the solvent used in the experiment.
+        submitted_at: The time the experiment was submitted.
+    """
 
     id: str
     """The experiment ID."""
-    dataset_name: str = Field(alias="datasetName")
+    dataset_name: str
     """The name of the dataset the experiment belongs to."""
-    experiment_number: str = Field(alias="experimentNo")
+    experiment_number: str
     """The experiment number."""
-    parameter_set: str = Field(alias="parameterSet")
+    parameter_set: str
     """The parameter set used to run the experiment."""
     parameters: str | None
     """The parameters used to run the experiment."""
@@ -81,7 +124,7 @@ class AutoExperiment(BaseModel):
     """The id of the group the experiment belongs to."""
     sovlent: str
     """The id of the solvent used in the experiment."""
-    submitted_at: datetime = Field(alias="submittedAt")
+    submitted_at: datetime
     """The time the experiment was submitted."""
 
 

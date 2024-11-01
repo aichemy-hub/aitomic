@@ -34,6 +34,6 @@ Examples:
 
 """
 
-from aitomic._internal.nomad_nmr import AuthToken, Client
+from aitomic._internal.nomad_nmr import AuthToken, AutoExperiment, Client
 
-__all__ = ["AuthToken", "Client"]
+__all__ = ["AuthToken", "AutoExperiment", "Client"]
