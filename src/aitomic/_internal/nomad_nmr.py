@@ -105,7 +105,7 @@ class AutoExperiment:
     """
 
     id: str
-    """The experiment ID."""
+    """The experiment id."""
     dataset_name: str
     """The name of the dataset the experiment belongs to."""
     experiment_number: str
@@ -132,6 +132,9 @@ class AutoExperiment:
 class AutoExperiments:
     """A collection of auto experiments.
 
+    Examples:
+        * :ref:`Downloading experiment data <downloading-experiment-data>`
+
     Parameters:
         client: The client to use for requests.
         inner: The auto experiments.
@@ -145,6 +148,9 @@ class AutoExperiments:
 
     def download(self) -> bytes:
         """Download the experiments into a zip file.
+
+        Examples:
+            * :ref:`Downloading experiment data <downloading-experiment-data>`
 
         Returns:
             The zip file as a series of bytes.
