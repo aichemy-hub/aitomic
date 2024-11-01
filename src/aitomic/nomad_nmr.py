@@ -19,6 +19,23 @@ Examples:
 
     **Downloading experiment data**
 
+    .. testsetup::
+
+        from aitomic import nomad_nmr
+        import tempfile
+        import os
+
+        tmp = tempfile.TemporaryDirectory()
+        pwd = os.getcwd()
+        os.chdir(tmp.name)
+
+        def change_url(func):
+            def wrapper(url, username, password):
+                return func(url, username=username, password=password)
+            return wrapper
+
+        nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
+
     .. testcode::
 
         from aitomic import nomad_nmr
@@ -31,6 +48,10 @@ Examples:
         experiments = client.auto_experiments()
         with open("experiments.zip", "wb") as f:
             f.write(experiments.download())
+
+    .. testcleanup::
+
+        os.chdir(pwd)
 
 """
 
