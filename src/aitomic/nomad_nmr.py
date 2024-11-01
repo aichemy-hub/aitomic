@@ -34,6 +34,6 @@ Examples:
 
 """
 
-from aitomic._internal.nomad_nmr import AuthToken, Client, RequestError
+from aitomic._internal.nomad_nmr import AuthToken, Client
 
-__all__ = ["AuthToken", "Client", "RequestError"]
+__all__ = ["AuthToken", "Client"]

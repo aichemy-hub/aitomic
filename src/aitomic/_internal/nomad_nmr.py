@@ -1,9 +1,7 @@
 from dataclasses import dataclass
 from datetime import UTC, datetime
 
-
-class RequestError(Exception):
-    """Raised when a request to the NOMAD server fails."""
+import requests
 
 
 @dataclass(slots=True)
@@ -20,7 +18,18 @@ class AuthToken:
 
         **Refreshing the token**
 
-        .. testcode::
+        .. testsetup:: refreshing-the-token
+
+            import os
+            from aitomic import nomad_nmr
+
+            client = nomad_nmr.Client.login(
+                os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
+                username="admin",
+                password="foo",
+            )
+
+        .. testcode:: refreshing-the-token
 
             if client.auth_token.expired():
                 client.auth()
@@ -68,17 +77,22 @@ class Client:
     """The authentication token to use for requests."""
 
     @staticmethod
-    def login() -> "Client":
+    def login(url: str, *, username: str, password: str) -> "Client":
         """Create a new client by logging into the NOMAD server.
 
         Examples:
             * :ref:`Downloading experiment data <downloading-experiment-data>`
 
         Raises:
-            RequestError: If the login request fails.
+            requests.HTTPError: If the login request fails.
 
         """
-        pass
+        response = requests.post(
+            f"{url}/api/auth/login",
+            data={"username": username, "password": password},
+            timeout=5,
+        )
+        response.raise_for_status()
 
     def auth(self) -> None:
         """Make the client use a new authentication token.
@@ -87,7 +101,6 @@ class Client:
             * :ref:`Refreshing the token <refreshing-the-token>`
 
         Raises:
-            RequestError: If the authentication request fails.
+            requests.HTTPError: If the authentication request fails.
 
         """
-        pass
