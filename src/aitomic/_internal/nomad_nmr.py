@@ -1,8 +1,15 @@
 from collections.abc import Iterator
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
+from typing import NewType
 
 import requests
+from pydantic import BaseModel, Field
+
+
+class AuthResponse(BaseModel):
+    expires_in: int = Field(alias="expiresIn")
+    token: str
 
 
 @dataclass(slots=True)
@@ -51,19 +58,63 @@ class AuthToken:
         return self.expires_at < datetime.now(UTC)
 
 
-@dataclass(slots=True, kw_only=True)
-class AutoExperiment:
-    """An experiment."""
+class AutoExperiment(BaseModel):
+    """Data about an auto experiment stored in NOMAD."""
+
+    id: str
+    """The experiment ID."""
+    dataset_name: str = Field(alias="datasetName")
+    """The name of the dataset the experiment belongs to."""
+    experiment_number: str = Field(alias="experimentNo")
+    """The experiment number."""
+    parameter_set: str = Field(alias="parameterSet")
+    """The parameter set used to run the experiment."""
+    parameters: str | None
+    """The parameters used to run the experiment."""
+    title: str
+    """The title of the experiment."""
+    instrument: str
+    """The id of the instrument used to run the experiment."""
+    user: str
+    """The id of the user who ran the experiment."""
+    group: str
+    """The id of the group the experiment belongs to."""
+    sovlent: str
+    """The id of the solvent used in the experiment."""
+    submitted_at: datetime = Field(alias="submittedAt")
+    """The time the experiment was submitted."""
 
 
 @dataclass(slots=True)
 class AutoExperiments:
-    """A collection of experiments."""
+    """A collection of auto experiments.
 
+    Parameters:
+        client: The client to use for requests.
+        inner: The auto experiments.
+
+    """
+
+    client: "Client"
+    """The client to use for requests."""
     inner: list[AutoExperiment]
+    """The auto experiments."""
 
     def download(self) -> bytes:
-        """Download the experiments into a zip file."""
+        """Download the experiments into a zip file.
+
+        Returns:
+            The zip file as a series of bytes.
+
+        Raises:
+            requests.HTTPError: If the download request fails.
+        """
+        response_ = requests.post(
+            f"{self.client.url}/api/v2/auto-experiments/download",
+            params={"id": [experiment.id for experiment in self]},
+            timeout=self.client.timeout,
+        )
+        response_.raise_for_status()
 
     def __iter__(self) -> Iterator[AutoExperiment]:
         """Iterate over the experiments."""
@@ -89,6 +140,7 @@ class Client:
         username: The username to use for authentication.
         password: The password to use for authentication.
         auth_token: The authentication token to use for requests.
+        timeout: The timeout for requests.
 
     """
 
@@ -100,9 +152,13 @@ class Client:
     """The password to use for authentication."""
     auth_token: AuthToken
     """The authentication token to use for requests."""
+    timeout: float = 5.0
+    """The timeout for requests."""
 
     @staticmethod
-    def login(url: str, *, username: str, password: str) -> "Client":
+    def login(
+        url: str, *, username: str, password: str, timeout: float = 5.0
+    ) -> "Client":
         """Create a new client by logging into the NOMAD server.
 
         Examples:
@@ -112,13 +168,27 @@ class Client:
             requests.HTTPError: If the login request fails.
 
         """
-        response = requests.post(
+        response_ = requests.post(
             f"{url}/api/auth/login",
-            data={"username": username, "password": password},
+            json={
+                "username": username,
+                "password": password,
+            },
             timeout=5,
         )
-        response.raise_for_status()
-        print(response.json())
+        response_.raise_for_status()
+        response = AuthResponse.model_validate(response_.json())
+        return Client(
+            url=url,
+            username=username,
+            password=password,
+            auth_token=AuthToken(
+                expires_at=datetime.now(UTC)
+                + timedelta(seconds=response.expires_in),
+                token=response.token,
+            ),
+            timeout=timeout,
+        )
 
     def auth(self) -> None:
         """Make the client use a new authentication token.
