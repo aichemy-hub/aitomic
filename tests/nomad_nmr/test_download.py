@@ -46,7 +46,9 @@ def test_download_some() -> None:
     )
 
     experiments = client.auto_experiments(
-        nomad_nmr.AutoExperimentQuery(solvent="CDCl3")
+        nomad_nmr.AutoExperimentQuery(
+            solvent="CDCl3", title=["Test Exp 1", "Test Exp 6"]
+        )
     )
     with tempfile.NamedTemporaryFile("wb") as f:
         f.write(experiments.download())
@@ -57,7 +59,6 @@ def test_download_some() -> None:
                 "2106231050-2-1-test1-10.json",
                 "2106231050-2-1-test1-11.json",
                 "2106241100-10-2-test3-10.json",
-                "2106241100-10-2-test4-1.json",
             ]
         )
         with zipfile.ZipFile(f.name) as zip_file:
