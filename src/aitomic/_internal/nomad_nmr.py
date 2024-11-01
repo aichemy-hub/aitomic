@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from datetime import UTC, datetime, timedelta
 
 import requests
-from pydantic import BaseModel, Field, ConfigDict
+from pydantic import BaseModel, Field
 
 
 class AuthResponse(BaseModel):
