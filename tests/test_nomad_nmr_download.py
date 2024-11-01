@@ -33,5 +33,5 @@ def test_download_all() -> None:
             for file in files:
                 assert (
                     zip_file.read(file).decode()
-                    == f"{file.removesuffix(".json")}"
+                    == f'"{file.removesuffix(".json")}"'
                 )
