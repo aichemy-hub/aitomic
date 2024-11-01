@@ -158,12 +158,13 @@ class AutoExperiments:
         Raises:
             requests.HTTPError: If the download request fails.
         """
-        response_ = requests.post(
+        response = requests.post(
             f"{self.client.url}/api/v2/auto-experiments/download",
             params={"id": [experiment.id for experiment in self]},
             timeout=self.client.timeout,
         )
-        response_.raise_for_status()
+        response.raise_for_status()
+        return response.content
 
     def __iter__(self) -> Iterator[AutoExperiment]:
         """Iterate over the experiments."""
@@ -172,7 +173,55 @@ class AutoExperiments:
 
 @dataclass(slots=True, kw_only=True)
 class AutoExperimentQuery:
-    """Query for auto experiments."""
+    """Query for auto experiments.
+
+    Most of the parameters here can be either a single value or a list of
+    values. If a list is provided, the query will match if any of the values
+    match. For example, this query:
+
+    .. testsetup::
+
+        from aitomic import nomad_nmr
+
+    .. testcode::
+
+        query = nomad_nmr.AutoExperimentQuery(
+            solvent=["DMSO", "CDCl3"],
+            title=["test", "test-1"],
+        )
+
+    will match any experiment with a solvent of either DMSO or CDCl3 AND an
+    experiment with a title of either test or test-1.
+
+
+    Examples:
+        * :ref:`Downloading experiment data matching a query \
+            <downloading-experiment-data-query>`
+
+    """
+
+    solvent: str | list[str] | None = None
+    """Filter for experiments with any of these solvents."""
+    instrument_id: str | list[str] | None = None
+    """Filter for experiments done on any of these instruments."""
+    parameter_set: str | list[str] | None = None
+    """Filter for experiments using any of these parameter sets."""
+    title: str | list[str] | None = None
+    """Filter for experiments with any of these titles."""
+    start_date: datetime | None = None
+    """Filter for experiments submitted after this date."""
+    end_date: datetime | None = None
+    """Filter for experiments submitted before this date."""
+    group_id: str | list[str] | None = None
+    """Filter for experiments belonging to any of these groups."""
+    user_id: str | list[str] | None = None
+    """Filter for experiments created by any of these users."""
+    dataset_name: str | list[str] | None = None
+    """Filter for experiments in any of these datasets."""
+    offset: int | None = None
+    """Skip the first ``offset`` experiments."""
+    limit: int | None = None
+    """Limit the number of experiments returned to ``limit``."""
 
 
 @dataclass(slots=True)
@@ -223,7 +272,7 @@ class Client:
                 "username": username,
                 "password": password,
             },
-            timeout=5,
+            timeout=timeout,
         )
         response_.raise_for_status()
         response = AuthResponse.model_validate(response_.json())
@@ -249,8 +298,42 @@ class Client:
             requests.HTTPError: If the authentication request fails.
 
         """
+        response_ = requests.post(
+            f"{self.url}/api/v2/auth/token",
+            json={
+                "username": self.username,
+                "password": self.password,
+            },
+            timeout=self.timeout,
+        )
+        response_.raise_for_status()
+        response = AuthResponse.model_validate(response_)
+        self.auth_token = AuthToken(
+            expires_at=datetime.now(UTC)
+            + timedelta(seconds=response.expires_in),
+            token=response.token,
+        )
 
     def auto_experiments(
         self, query: AutoExperimentQuery | None = None
     ) -> AutoExperiments:
-        pass
+        """Get a collection of auto experiments.
+
+        Examples:
+            * :ref:`Downloading experiment data <downloading-experiment-data>`
+            * :ref:`Downloading experiment data matching a query \
+                <downloading-experiment-data-query>`
+
+        Parameters:
+            query: The query to use for filtering the experiments.
+
+        Returns:
+            The collection of auto experiments.
+
+        Raises:
+            requests.HTTPError: If the request fails.
+        """
+
+        response = requests.get(
+            f"{self.url}/api/v2/auto-experiments", params={}
+        )
