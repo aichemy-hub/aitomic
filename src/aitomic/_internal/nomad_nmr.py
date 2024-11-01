@@ -193,8 +193,8 @@ class AutoExperimentQuery:
             title=["test", "test-1"],
         )
 
-    will match any experiment with a solvent of either DMSO or CDCl3 AND an
-    experiment with a title of either test or test-1.
+    will match any experiment with a solvent of either ``DMSO`` or ``CDCl3`` 
+    AND an experiment with a title of either ``test`` or ``test-1``.
 
 
     Examples:
