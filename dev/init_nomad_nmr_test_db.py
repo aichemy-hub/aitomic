@@ -253,14 +253,9 @@ class Experiment(BaseModel):
     parameter_set: str = Field(alias="parameterSet")
     exp_no: str = Field(alias="expNo")
     holder: str
-    data_path: Path = Field(alias="dataPath")
+    data_path: str = Field(alias="dataPath")
     solvent: str
     submitted_at: datetime | None = Field(default=None, alias="submittedAt")
-
-    @field_serializer("data_path")
-    def serialize_submitted_at(self, value: Path) -> str:
-        """Serialize the :attr:`data_path`."""
-        return str(value)
 
 
 def _add_experiments(  # noqa: PLR0913
@@ -286,7 +281,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[0],
             expNo="10",
             holder="2",
-            dataPath=datastore / "2106231050-2-1-test1-10",
+            dataPath=".",
             solvent="CDCl3",
             submittedAt=None,
         ),
@@ -301,7 +296,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[0],
             expNo="11",
             holder="2",
-            dataPath=datastore / "2106231050-2-1-test1-11",
+            dataPath=".",
             solvent="CDCl3",
             submittedAt=None,
         ),
@@ -316,7 +311,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[1],
             expNo="10",
             holder="3",
-            dataPath=datastore / "2106231055-3-2-test2-10",
+            dataPath=".",
             solvent="C6D6",
             submittedAt=None,
         ),
@@ -331,7 +326,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[2],
             expNo="10",
             holder="10",
-            dataPath=datastore / "2106231100-10-2-test3-10",
+            dataPath=".",
             solvent="C6D6",
             submittedAt=None,
         ),
@@ -346,7 +341,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[2],
             expNo="10",
             holder="10",
-            dataPath=datastore / "2106240012-10-2-test2-10",
+            dataPath=".",
             solvent="C6D6",
             submittedAt=None,
         ),
@@ -361,7 +356,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[2],
             expNo="10",
             holder="10",
-            dataPath=datastore / "2106241100-10-2-test3-10",
+            dataPath=".",
             solvent="CDCl3",
             submittedAt=None,
         ),
@@ -376,7 +371,7 @@ def _add_experiments(  # noqa: PLR0913
             parameterSet=parameter_sets[2],
             expNo="1",
             holder="11",
-            dataPath=datastore / "2106241100-10-2-test4-1",
+            dataPath=".",
             solvent="CDCl3",
             submittedAt=datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC),
         ),
