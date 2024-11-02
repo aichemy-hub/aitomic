@@ -6,8 +6,9 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, NewType
 
+from bson.objectid import ObjectId
 import pymongo
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field
 from pymongo.database import Database
 
 
@@ -50,40 +51,43 @@ class Instrument(BaseModel):
 def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
     collection = db.get_collection("instruments")
     collection.delete_many({})
-    return collection.insert_many(
-        [
-            Instrument(
-                name="instrument-1",
-                isActive=True,
-                available=True,
-                capacity=60,
-                cost=3,
-                dayAllowance=2,
-                nightAllowance=105,
-                overheadTime=255,
-            ).model_dump(),
-            Instrument(
-                name="instrument-2",
-                isActive=False,
-                available=False,
-                capacity=60,
-                cost=2,
-                dayAllowance=20,
-                nightAllowance=195,
-                overheadTime=255,
-            ).model_dump(),
-            Instrument(
-                name="instrument-3",
-                isActive=True,
-                available=True,
-                capacity=24,
-                cost=2,
-                dayAllowance=20,
-                nightAllowance=195,
-                overheadTime=255,
-            ).model_dump(),
-        ]
-    ).inserted_ids
+    return [
+        InstrumentId(str(id_))
+        for id_ in collection.insert_many(
+            [
+                Instrument(
+                    name="instrument-1",
+                    isActive=True,
+                    available=True,
+                    capacity=60,
+                    cost=3,
+                    dayAllowance=2,
+                    nightAllowance=105,
+                    overheadTime=255,
+                ).model_dump(),
+                Instrument(
+                    name="instrument-2",
+                    isActive=False,
+                    available=False,
+                    capacity=60,
+                    cost=2,
+                    dayAllowance=20,
+                    nightAllowance=195,
+                    overheadTime=255,
+                ).model_dump(),
+                Instrument(
+                    name="instrument-3",
+                    isActive=True,
+                    available=True,
+                    capacity=24,
+                    cost=2,
+                    dayAllowance=20,
+                    nightAllowance=195,
+                    overheadTime=255,
+                ).model_dump(),
+            ]
+        ).inserted_ids
+    ]
 
 
 class ParameterSet(BaseModel):
@@ -135,24 +139,27 @@ class Group(BaseModel):
 def _add_groups(db: Database[Any]) -> list[GroupId]:
     collection = db.get_collection("groups")
     collection.delete_many({"groupName": {"$ne": "default"}})
-    return collection.insert_many(
-        [
-            Group(
-                name="group-1",
-                isActive=True,
-                description="Test group 1",
-                isBatch=False,
-                dataAccess="user",
-            ).model_dump(),
-            Group(
-                name="test-admins",
-                isActive=True,
-                description="Admins test group",
-                isBatch=True,
-                dataAccess="user",
-            ).model_dump(),
-        ]
-    ).inserted_ids
+    return [
+        GroupId(str(id_))
+        for id_ in collection.insert_many(
+            [
+                Group(
+                    name="group-1",
+                    isActive=True,
+                    description="Test group 1",
+                    isBatch=False,
+                    dataAccess="user",
+                ).model_dump(),
+                Group(
+                    name="test-admins",
+                    isActive=True,
+                    description="Admins test group",
+                    isBatch=True,
+                    dataAccess="user",
+                ).model_dump(),
+            ]
+        ).inserted_ids
+    ]
 
 
 UserId = NewType("UserId", str)
@@ -161,7 +168,6 @@ UserId = NewType("UserId", str)
 class User(BaseModel):
     """A user."""
 
-    id: UserId | None = None
     username: str
     full_name: str = Field(alias="fullName")
     email: str
@@ -174,37 +180,40 @@ class User(BaseModel):
 def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
     collection = db.get_collection("users")
     collection.delete_many({})
-    return collection.insert_many(
-        [
-            User(
-                username="test1",
-                fullName="Test User 1",
-                email="test1@test.com",
-                password="t1p1",  # noqa: S106
-                isActive=False,
-                group=groups[0],
-                accessLevel="user",
-            ).model_dump(),
-            User(
-                username="test2",
-                fullName="Test User 2",
-                email="test2@test.com",
-                password="t2p2",  # noqa: S106
-                isActive=True,
-                group=groups[0],
-                accessLevel="user",
-            ).model_dump(),
-            User(
-                username="test3",
-                fullName="Test User 3",
-                email="test3@test.com",
-                password="t3p3",  # noqa: S106
-                isActive=True,
-                group=groups[1],
-                accessLevel="admin",
-            ).model_dump(),
-        ]
-    ).inserted_ids
+    return [
+        UserId(str(id_))
+        for id_ in collection.insert_many(
+            [
+                User(
+                    username="test1",
+                    fullName="Test User 1",
+                    email="test1@test.com",
+                    password="t1p1",  # noqa: S106
+                    isActive=False,
+                    group=groups[0],
+                    accessLevel="user",
+                ).model_dump(),
+                User(
+                    username="test2",
+                    fullName="Test User 2",
+                    email="test2@test.com",
+                    password="t2p2",  # noqa: S106
+                    isActive=True,
+                    group=groups[0],
+                    accessLevel="user",
+                ).model_dump(),
+                User(
+                    username="test3",
+                    fullName="Test User 3",
+                    email="test3@test.com",
+                    password="t3p3",  # noqa: S106
+                    isActive=True,
+                    group=groups[1],
+                    accessLevel="admin",
+                ).model_dump(),
+            ]
+        ).inserted_ids
+    ]
 
 
 ExperimentId = NewType("ExperimentId", str)
@@ -367,9 +376,12 @@ def _add_experiments(  # noqa: PLR0913
             submittedAt=datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC),
         ),
     ]
-    ids = collection.insert_many(
-        experiment.model_dump() for experiment in experiments
-    ).inserted_ids
+    ids = [
+        ExperimentId(str(id_))
+        for id_ in collection.insert_many(
+            experiment.model_dump() for experiment in experiments
+        ).inserted_ids
+    ]
     for experiment in experiments:
         with (
             zipfile.ZipFile(
