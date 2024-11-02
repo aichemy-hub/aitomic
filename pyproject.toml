@@ -9,6 +9,7 @@ maintainers = [
 ]
 
 dependencies = [
+  "nmrglue>=0.11",
   "polars>=1.12.0",
   "pydantic>=2.9.2",
   "requests>=2.32.3",
@@ -80,7 +81,7 @@ warn_unreachable = true
 disallow_any_generics = true
 
 [[tool.mypy.overrides]]
-module = []
+module = ["nmrglue.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]
