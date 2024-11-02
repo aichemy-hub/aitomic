@@ -25,6 +25,42 @@ Examples:
     :class:`polars.DataFrame` holding all the peaks, including their
     spectrum of origin, ppm and volume:
 
+    .. testsetup:: getting-peak-df
+
+        from aitomic import nomad_nmr
+        import tempfile
+        import os
+
+        tmp = tempfile.TemporaryDirectory()
+        pwd = os.getcwd()
+        os.chdir(tmp.name)
+
+        def change_url(func):
+            def wrapper(url, username, password):
+                return func(
+                    os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
+                    username="admin",
+                    password="foo",
+                )
+            return wrapper
+
+        nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
+
+    .. testcode:: getting-peak-df
+
+        from aitomic import bruker, nomad_nmr
+
+        client = nomad_nmr.Client.login(
+            "http://demo.nomad-nmr.uk",
+            username="demo",
+            password="dem0User",
+        )
+        experiments = client.auto_experiments()
+        peak_df = bruker.peaks_df_1d(experiments.download())
+
+    .. testcleanup:: getting-peak-df
+
+        os.chdir(pwd)
 
     .. _downloading-experiment-data:
 
