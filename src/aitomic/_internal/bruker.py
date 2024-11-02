@@ -26,14 +26,16 @@ def nmr_peaks_df_1d(
         The peaks as a polars data frame.
 
     """
-    with tempfile.TemporaryDirectory() as tmp:
-        with Path(tmp, "spectra.zip").open("wb") as f:
+    with tempfile.TemporaryDirectory() as tmp_:
+        tmp = Path(tmp_)
+        with tmp.joinpath("spectra.zip").open("wb") as f:
             f.write(zip_file)
-        zipfile.ZipFile(tmp).extractall(tmp)
+        spectra_dir = tmp / "spectra"
+        zipfile.ZipFile(tmp).extractall(spectra_dir)
         ppms = []
         volumes = []
         spectra = []
-        for spectrum_dir in Path(tmp).glob("*"):
+        for spectrum_dir in spectra_dir.glob("*"):
             for peak in _pick_peaks(spectrum_dir, peak_threshold):
                 ppms.append(peak.ppm)
                 volumes.append(peak.volume)
