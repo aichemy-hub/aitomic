@@ -58,6 +58,15 @@ Examples:
         experiments = client.auto_experiments()
         peak_df = bruker.peaks_df_1d(experiments.download())
 
+    .. testcode:: getting-peak-df
+        :hide:
+
+        print(peak_df)
+
+    .. testoutput:: getting-peak-df
+
+        =======
+
     .. testcleanup:: getting-peak-df
 
         os.chdir(pwd)
