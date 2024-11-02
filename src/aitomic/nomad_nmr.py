@@ -100,6 +100,67 @@ Examples:
             )
         )
         Path("experiments.zip").write_bytes(experiments.download())
+
+    .. testcleanup:: downloading-experiment-data
+
+        os.chdir(pwd)
+
+    .. _additional-filtering:
+
+    **Additional filtering**
+
+    Sometimes the filtering allowed by :class:`.AutoExperimentQuery` is not
+    enough. In this case, you can use the :attr:`.AutoExperiments.inner`
+    attribute to filter the experiments yourself, and then download only
+    the experiments you want:
+
+    .. testsetup:: additional-filtering
+
+        from aitomic import nomad_nmr
+        import tempfile
+        import os
+
+        tmp = tempfile.TemporaryDirectory()
+        pwd = os.getcwd()
+        os.chdir(tmp.name)
+
+        def change_url(func):
+            def wrapper(url, username, password):
+                return func(
+                    os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
+                    username="admin",
+                    password="foo",
+                )
+            return wrapper
+
+        nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
+
+    .. testcode:: additional-filtering
+
+        from aitomic import nomad_nmr
+        from pathlib import Path
+
+        client = nomad_nmr.Client.login(
+            "http://demo.nomad-nmr.uk",
+            username="demo",
+            password="dem0User",
+        )
+        experiments = client.auto_experiments(
+            query=nomad_nmr.AutoExperimentQuery(
+                solvent="DMSO",
+            )
+        )
+        experiments.inner = [
+            experiment
+            for experiment in experiments
+            if "special-study" in experiment.title
+        ]
+        Path("experiments.zip").write_bytes(experiments.download())
+
+    .. testcleanup:: additional-filtering
+
+        os.chdir(pwd)
+
 """
 
 from aitomic._internal.nomad_nmr import (

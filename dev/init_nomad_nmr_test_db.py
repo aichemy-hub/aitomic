@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Any, NewType
 
 import pymongo
-from pydantic import BaseModel, Field, field_serializer
+from pydantic import BaseModel, Field
 from pymongo.database import Database
 
 
