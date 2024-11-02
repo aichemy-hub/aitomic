@@ -7,7 +7,6 @@ from pathlib import Path
 from typing import Any, NewType
 
 import pymongo
-from bson.objectid import ObjectId
 from pydantic import BaseModel, Field
 from pymongo.database import Database
 
@@ -19,19 +18,20 @@ def main() -> None:
     client = pymongo.MongoClient[Any](args.uri)
     db = client.get_database("nomad")
     instruments = _add_instruments(db)
-    _add_parameter_sets(db, instruments)
+    parameter_sets = _add_parameter_sets(db, instruments)
     groups = _add_groups(db)
     users = _add_users(db, groups)
-    _add_experiments(db, instruments, groups, users, args.datastore)
+    _add_experiments(
+        db, instruments, groups, users, parameter_sets, args.datastore
+    )
 
 
-InstrumentId = NewType("InstrumentId", ObjectId)
+InstrumentId = NewType("InstrumentId", str)
 
 
 class Instrument(BaseModel):
     """An instrument."""
 
-    id: InstrumentId | None = None
     name: str
     is_active: bool = Field(alias="isActive")
     available: bool
@@ -58,7 +58,6 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                 overheadTime=255,
             ),
             Instrument(
-                id=None,
                 name="instrument-2",
                 isActive=False,
                 available=False,
@@ -69,7 +68,6 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                 overheadTime=255,
             ),
             Instrument(
-                id=None,
                 name="instrument-3",
                 isActive=True,
                 available=True,
@@ -83,13 +81,12 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
     ).inserted_ids
 
 
-ParameterSetId = NewType("ParameterSetId", ObjectId)
+ParameterSetId = NewType("ParameterSetId", str)
 
 
 class ParameterSet(BaseModel):
     """A parameter set."""
 
-    id: ParameterSetId | None = None
     name: str
     available_on: list[InstrumentId] = Field(alias="availableOn")
 
@@ -107,12 +104,10 @@ def _add_parameter_sets(
                 availableOn=[instruments[0]],
             ),
             ParameterSet(
-                id=None,
                 name="parameter-set-2",
                 availableOn=[instruments[1]],
             ),
             ParameterSet(
-                id=None,
                 name="parameter-set-3",
                 availableOn=[instruments[0], instruments[2]],
             ),
@@ -120,13 +115,12 @@ def _add_parameter_sets(
     ).inserted_ids
 
 
-GroupId = NewType("GroupId", ObjectId)
+GroupId = NewType("GroupId", str)
 
 
 class Group(BaseModel):
     """A group."""
 
-    id: GroupId | None = None
     name: str
     is_active: bool = Field(alias="isActive")
     description: str
@@ -147,7 +141,6 @@ def _add_groups(db: Database[Any]) -> list[GroupId]:
                 dataAccess="user",
             ),
             Group(
-                id=None,
                 name="test-admins",
                 isActive=True,
                 description="Admins test group",
@@ -158,7 +151,7 @@ def _add_groups(db: Database[Any]) -> list[GroupId]:
     ).inserted_ids
 
 
-UserId = NewType("UserId", ObjectId)
+UserId = NewType("UserId", str)
 
 
 class User(BaseModel):
@@ -189,7 +182,6 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                 accessLevel="user",
             ),
             User(
-                id=None,
                 username="test2",
                 fullName="Test User 2",
                 email="test2@test.com",
@@ -199,7 +191,6 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                 accessLevel="user",
             ),
             User(
-                id=None,
                 username="test3",
                 fullName="Test User 3",
                 email="test3@test.com",
@@ -212,7 +203,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
     ).inserted_ids
 
 
-ExperimentId = NewType("ExperimentId", ObjectId)
+ExperimentId = NewType("ExperimentId", str)
 
 
 class InstrumentInfo(BaseModel):
@@ -239,7 +230,6 @@ class GroupInfo(BaseModel):
 class Experiment(BaseModel):
     """An experiment."""
 
-    id: ExperimentId | None = None
     exp_id: str = Field(alias="expId")
     instrument: InstrumentInfo
     user: UserInfo
@@ -260,6 +250,7 @@ def _add_experiments(
     instruments: list[InstrumentId],
     groups: list[GroupId],
     users: list[UserId],
+    parameter_sets: list[ParameterSetId],
     datastore: Path,
 ) -> list[ExperimentId]:
     collection = db.get_collection("experiments")
@@ -273,9 +264,7 @@ def _add_experiments(
             datasetName="2106231050-2-1-test1",
             status="Archived",
             title="Test Exp 1",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[0],
             expNo="10",
             holder="2",
             dataPath=datastore / "2106231050-2-1-test1-10",
@@ -290,9 +279,7 @@ def _add_experiments(
             datasetName="2106231050-2-1-test1",
             status="Archived",
             title="Test Exp 1",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[0],
             expNo="11",
             holder="2",
             dataPath=datastore / "2106231050-2-1-test1-11",
@@ -307,9 +294,7 @@ def _add_experiments(
             datasetName="2106231055-3-2-test2",
             status="Archived",
             title="Test Exp 3",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[1],
             expNo="10",
             holder="3",
             dataPath=datastore / "2106231055-3-2-test2-10",
@@ -324,9 +309,7 @@ def _add_experiments(
             datasetName="2106231100-10-2-test3",
             status="Archived",
             title="Test Exp 4",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[2],
             expNo="10",
             holder="10",
             dataPath=datastore / "2106231100-10-2-test3-10",
@@ -341,9 +324,7 @@ def _add_experiments(
             datasetName="2106240012-10-2-test2",
             status="Available",
             title="Test Exp 5",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[2],
             expNo="10",
             holder="10",
             dataPath=datastore / "2106240012-10-2-test2-10",
@@ -358,9 +339,7 @@ def _add_experiments(
             datasetName="2106241100-10-2-test3",
             status="Archived",
             title="Test Exp 6",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[3],
             expNo="10",
             holder="10",
             dataPath=datastore / "2106241100-10-2-test3-10",
@@ -375,9 +354,7 @@ def _add_experiments(
             datasetName="2106241100-10-2-test4",
             status="Archived",
             title="Test Exp 7",
-            parameterSet=ParameterSetId(
-                ObjectId.from_datetime(datetime.now(UTC))
-            ),
+            parameterSet=parameter_sets[3],
             expNo="1",
             holder="11",
             dataPath=datastore / "2106241100-10-2-test4-1",
