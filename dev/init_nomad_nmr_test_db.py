@@ -179,7 +179,7 @@ class User(BaseModel):
 
 def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
     collection = db.get_collection("users")
-    collection.delete_many({})
+    collection.delete_many({"username": {"$ne": "admin"}})
     return [
         UserId(str(id_))
         for id_ in collection.insert_many(
