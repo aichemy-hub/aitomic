@@ -27,6 +27,7 @@ dev = [
   "sphinx",
   "sphinx-copybutton",
   "furo",
+  "pymongo>=4.10.1",
 ]
 
 [project.urls]
@@ -46,6 +47,7 @@ ignore = ["ANN101", "ANN401", "COM812", "ISC001"]
 convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
+"dev/init_nomad_nmr_test_db.py" = ["INP001"]
 "tests/*" = [
   "D100",
   "D101",
