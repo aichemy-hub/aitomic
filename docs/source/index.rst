@@ -11,6 +11,7 @@ Welcome to aitomic's documentation!
   :maxdepth: 2
   :caption: Contents:
 
+  NOMAD NMR <_autosummary/aitomic.nomad_nmr>
   Modules <modules>
 
 
