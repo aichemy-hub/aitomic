@@ -22,7 +22,12 @@ def main() -> None:
     groups = _add_groups(db)
     users = _add_users(db, groups)
     _add_experiments(
-        db, instruments, groups, users, parameter_sets, args.datastore
+        db=db,
+        instruments=instruments,
+        groups=groups,
+        users=users,
+        parameter_sets=parameter_sets,
+        datastore=args.datastore,
     )
 
 
@@ -81,9 +86,6 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
     ).inserted_ids
 
 
-ParameterSetId = NewType("ParameterSetId", str)
-
-
 class ParameterSet(BaseModel):
     """A parameter set."""
 
@@ -94,25 +96,25 @@ class ParameterSet(BaseModel):
 def _add_parameter_sets(
     db: Database[Any],
     instruments: list[InstrumentId],
-) -> list[ParameterSetId]:
+) -> list[str]:
     collection = db.get_collection("parameterSets")
     collection.delete_many({})
-    return collection.insert_many(
-        [
-            ParameterSet(
-                name="parameter-set-1",
-                availableOn=[instruments[0]],
-            ),
-            ParameterSet(
-                name="parameter-set-2",
-                availableOn=[instruments[1]],
-            ),
-            ParameterSet(
-                name="parameter-set-3",
-                availableOn=[instruments[0], instruments[2]],
-            ),
-        ]
-    ).inserted_ids
+    parameter_sets = [
+        ParameterSet(
+            name="parameter-set-1",
+            availableOn=[instruments[0]],
+        ),
+        ParameterSet(
+            name="parameter-set-2",
+            availableOn=[instruments[1]],
+        ),
+        ParameterSet(
+            name="parameter-set-3",
+            availableOn=[instruments[0], instruments[2]],
+        ),
+    ]
+    collection.insert_many(parameter_sets)
+    return [parameter_set.name for parameter_set in parameter_sets]
 
 
 GroupId = NewType("GroupId", str)
@@ -237,7 +239,7 @@ class Experiment(BaseModel):
     dataset_name: str = Field(alias="datasetName")
     status: str
     title: str
-    parameter_set: ParameterSetId = Field(alias="parameterSet")
+    parameter_set: str = Field(alias="parameterSet")
     exp_no: str = Field(alias="expNo")
     holder: str
     data_path: Path = Field(alias="dataPath")
@@ -245,12 +247,13 @@ class Experiment(BaseModel):
     submitte_at: datetime | None = Field(default=None, alias="submittedAt")
 
 
-def _add_experiments(
+def _add_experiments(  # noqa: PLR0913
+    *,
     db: Database[Any],
     instruments: list[InstrumentId],
     groups: list[GroupId],
     users: list[UserId],
-    parameter_sets: list[ParameterSetId],
+    parameter_sets: list[str],
     datastore: Path,
 ) -> list[ExperimentId]:
     collection = db.get_collection("experiments")
