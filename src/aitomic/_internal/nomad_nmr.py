@@ -133,6 +133,7 @@ class AutoExperiments:
     """A collection of auto experiments.
 
     Examples:
+        * :ref:`Getting an NMR peak data frame <getting-peak-df>`
         * :ref:`Downloading experiment data <downloading-experiment-data>`
 
     Parameters:
@@ -150,6 +151,7 @@ class AutoExperiments:
         """Download the experiments into a zip file.
 
         Examples:
+            * :ref:`Getting an NMR peak data frame <getting-peak-df>`
             * :ref:`Downloading experiment data <downloading-experiment-data>`
 
         Returns:
@@ -247,6 +249,7 @@ class Client:
     Use the methods on the client send requests to the NOMAD server.
 
     Examples:
+        * :ref:`Getting an NMR peak data frame <getting-peak-df>`
         * :ref:`Downloading experiment data <downloading-experiment-data>`
 
     Parameters:
@@ -336,6 +339,7 @@ class Client:
         """Get a collection of auto experiments.
 
         Examples:
+            * :ref:`Getting an NMR peak data frame <getting-peak-df>`
             * :ref:`Downloading experiment data <downloading-experiment-data>`
             * :ref:`Downloading experiment data matching a query \
                 <downloading-experiment-data-query>`

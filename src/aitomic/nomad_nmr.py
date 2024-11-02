@@ -15,6 +15,17 @@ machine learning.
 .. _`NOMAD NMR`: https://www.nomad-nmr.uk
 
 Examples:
+    .. _getting-peak-df:
+
+    **Gettiing an NMR peak data frame**
+
+    If you have data in the NOMAD server, chances are you want to use it for
+    some kind of data analysis. The easiest thing to do is to get a
+    :class:`polars.DataFrame` with all your NMR peaks. Here we produce
+    :class:`polars.DataFrame` holding all the peaks, including their
+    spectrum of origin, ppm and volume:
+
+
     .. _downloading-experiment-data:
 
     **Downloading experiment data**
