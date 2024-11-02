@@ -61,7 +61,7 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                 dayAllowance=2,
                 nightAllowance=105,
                 overheadTime=255,
-            ),
+            ).model_dump(),
             Instrument(
                 name="instrument-2",
                 isActive=False,
@@ -71,7 +71,7 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                 dayAllowance=20,
                 nightAllowance=195,
                 overheadTime=255,
-            ),
+            ).model_dump(),
             Instrument(
                 name="instrument-3",
                 isActive=True,
@@ -81,7 +81,7 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                 dayAllowance=20,
                 nightAllowance=195,
                 overheadTime=255,
-            ),
+            ).model_dump(),
         ]
     ).inserted_ids
 
@@ -113,7 +113,9 @@ def _add_parameter_sets(
             availableOn=[instruments[0], instruments[2]],
         ),
     ]
-    collection.insert_many(parameter_sets)
+    collection.insert_many(
+        parameter_set.model_dump() for parameter_set in parameter_sets
+    )
     return [parameter_set.name for parameter_set in parameter_sets]
 
 
@@ -141,14 +143,14 @@ def _add_groups(db: Database[Any]) -> list[GroupId]:
                 description="Test group 1",
                 isBatch=False,
                 dataAccess="user",
-            ),
+            ).model_dump(),
             Group(
                 name="test-admins",
                 isActive=True,
                 description="Admins test group",
                 isBatch=True,
                 dataAccess="user",
-            ),
+            ).model_dump(),
         ]
     ).inserted_ids
 
@@ -182,7 +184,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                 isActive=False,
                 group=groups[0],
                 accessLevel="user",
-            ),
+            ).model_dump(),
             User(
                 username="test2",
                 fullName="Test User 2",
@@ -191,7 +193,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                 isActive=True,
                 group=groups[0],
                 accessLevel="user",
-            ),
+            ).model_dump(),
             User(
                 username="test3",
                 fullName="Test User 3",
@@ -200,7 +202,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                 isActive=True,
                 group=groups[1],
                 accessLevel="admin",
-            ),
+            ).model_dump(),
         ]
     ).inserted_ids
 
@@ -365,7 +367,9 @@ def _add_experiments(  # noqa: PLR0913
             submittedAt=datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC),
         ),
     ]
-    ids = collection.insert_many(experiments).inserted_ids
+    ids = collection.insert_many(
+        experiment.model_dump() for experiment in experiments
+    ).inserted_ids
     for experiment in experiments:
         with (
             zipfile.ZipFile(
