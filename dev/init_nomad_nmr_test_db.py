@@ -6,9 +6,8 @@ from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, NewType
 
-from bson.objectid import ObjectId
 import pymongo
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, Field, field_serializer
 from pymongo.database import Database
 
 
@@ -64,7 +63,7 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                     dayAllowance=2,
                     nightAllowance=105,
                     overheadTime=255,
-                ).model_dump(),
+                ).model_dump(by_alias=True),
                 Instrument(
                     name="instrument-2",
                     isActive=False,
@@ -74,7 +73,7 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                     dayAllowance=20,
                     nightAllowance=195,
                     overheadTime=255,
-                ).model_dump(),
+                ).model_dump(by_alias=True),
                 Instrument(
                     name="instrument-3",
                     isActive=True,
@@ -84,7 +83,7 @@ def _add_instruments(db: Database[Any]) -> list[InstrumentId]:
                     dayAllowance=20,
                     nightAllowance=195,
                     overheadTime=255,
-                ).model_dump(),
+                ).model_dump(by_alias=True),
             ]
         ).inserted_ids
     ]
@@ -118,7 +117,8 @@ def _add_parameter_sets(
         ),
     ]
     collection.insert_many(
-        parameter_set.model_dump() for parameter_set in parameter_sets
+        parameter_set.model_dump(by_alias=True)
+        for parameter_set in parameter_sets
     )
     return [parameter_set.name for parameter_set in parameter_sets]
 
@@ -129,7 +129,7 @@ GroupId = NewType("GroupId", str)
 class Group(BaseModel):
     """A group."""
 
-    name: str
+    name: str = Field(alias="groupName")
     is_active: bool = Field(alias="isActive")
     description: str
     is_batch: bool = Field(alias="isBatch")
@@ -144,19 +144,19 @@ def _add_groups(db: Database[Any]) -> list[GroupId]:
         for id_ in collection.insert_many(
             [
                 Group(
-                    name="group-1",
+                    groupName="group-1",
                     isActive=True,
                     description="Test group 1",
                     isBatch=False,
                     dataAccess="user",
-                ).model_dump(),
+                ).model_dump(by_alias=True),
                 Group(
-                    name="test-admins",
+                    groupName="test-admins",
                     isActive=True,
                     description="Admins test group",
                     isBatch=True,
                     dataAccess="user",
-                ).model_dump(),
+                ).model_dump(by_alias=True),
             ]
         ).inserted_ids
     ]
@@ -192,7 +192,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                     isActive=False,
                     group=groups[0],
                     accessLevel="user",
-                ).model_dump(),
+                ).model_dump(by_alias=True),
                 User(
                     username="test2",
                     fullName="Test User 2",
@@ -201,7 +201,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                     isActive=True,
                     group=groups[0],
                     accessLevel="user",
-                ).model_dump(),
+                ).model_dump(by_alias=True),
                 User(
                     username="test3",
                     fullName="Test User 3",
@@ -210,7 +210,7 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
                     isActive=True,
                     group=groups[1],
                     accessLevel="admin",
-                ).model_dump(),
+                ).model_dump(by_alias=True),
             ]
         ).inserted_ids
     ]
@@ -255,7 +255,12 @@ class Experiment(BaseModel):
     holder: str
     data_path: Path = Field(alias="dataPath")
     solvent: str
-    submitte_at: datetime | None = Field(default=None, alias="submittedAt")
+    submitted_at: datetime | None = Field(default=None, alias="submittedAt")
+
+    @field_serializer("data_path")
+    def serialize_submitted_at(self, value: Path) -> str:
+        """Serialize the :attr:`data_path`."""
+        return str(value)
 
 
 def _add_experiments(  # noqa: PLR0913
@@ -353,7 +358,7 @@ def _add_experiments(  # noqa: PLR0913
             datasetName="2106241100-10-2-test3",
             status="Archived",
             title="Test Exp 6",
-            parameterSet=parameter_sets[3],
+            parameterSet=parameter_sets[2],
             expNo="10",
             holder="10",
             dataPath=datastore / "2106241100-10-2-test3-10",
@@ -368,7 +373,7 @@ def _add_experiments(  # noqa: PLR0913
             datasetName="2106241100-10-2-test4",
             status="Archived",
             title="Test Exp 7",
-            parameterSet=parameter_sets[3],
+            parameterSet=parameter_sets[2],
             expNo="1",
             holder="11",
             dataPath=datastore / "2106241100-10-2-test4-1",
@@ -379,7 +384,7 @@ def _add_experiments(  # noqa: PLR0913
     ids = [
         ExperimentId(str(id_))
         for id_ in collection.insert_many(
-            experiment.model_dump() for experiment in experiments
+            experiment.model_dump(by_alias=True) for experiment in experiments
         ).inserted_ids
     ]
     for experiment in experiments:

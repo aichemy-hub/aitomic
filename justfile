@@ -20,15 +20,15 @@ check:
   trap error=1 ERR
 
   echo
-  (set -x; uv run ruff check src/ tests/ docs/source/ examples/ )
+  (set -x; uv run ruff check src/ tests/ docs/source/ examples/ dev/ )
   test $? = 0
 
   echo
-  ( set -x; uv run ruff format --check src/ tests/ docs/source/ examples/ )
+  ( set -x; uv run ruff format --check src/ tests/ docs/source/ examples/ dev/ )
   test $? = 0
 
   echo
-  ( set -x; uv run mypy src/ tests/ docs/source/ examples/ )
+  ( set -x; uv run mypy src/ tests/ docs/source/ examples/ dev/ )
   test $? = 0
 
   echo
@@ -43,8 +43,8 @@ check:
 
 # Auto-fix code issues.
 fix:
-  uv run ruff format src/ tests/ docs/source/ examples/
-  uv run ruff check --fix src/ tests/ docs/source/ examples/
+  uv run ruff format src/ tests/ docs/source/ examples/ dev/
+  uv run ruff check --fix src/ tests/ docs/source/ examples/ dev/
 
 # Build a release.
 build:
