@@ -389,7 +389,7 @@ def _add_experiments(  # noqa: PLR0913
             ) as archive,
             archive.open(f"{experiment.exp_id}.json", "w") as f,
         ):
-            f.write(experiment.model_dump_json().encode())
+            f.write(f'"{experiment.exp_id}"'.encode())
     return ids
 
 
