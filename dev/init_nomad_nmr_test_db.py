@@ -2,20 +2,27 @@
 
 import argparse
 from pathlib import Path
+from typing import Any
 
-from aitomic import nomad_nmr
+import pymongo
+from pydantic import BaseModel
 
 
 def main() -> None:
     """Run the example."""
     args = _parse_args()
 
-    client = nomad_nmr.Client.login(
-        args.url,
-        username=args.username,
-        password=args.password,
-    )
-    client.auto_experiments().download()
+    client = pymongo.MongoClient[Any](args.uri)
+    db = client.get_database("nomad")
+    instruments = _add_instruments(db)
+
+
+class Instrument(BaseModel):
+    """An instrument."""
+
+
+def _add_instruments(db: pymongo.database.Database) -> list[Instrument]:
+    pass
 
 
 def _parse_args() -> argparse.Namespace:
