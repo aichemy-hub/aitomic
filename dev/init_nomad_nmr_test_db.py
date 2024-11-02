@@ -1,7 +1,8 @@
 """Populate a test NOMAD NMR database with data."""
 
 import argparse
-from datetime import datetime
+import zipfile
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, NewType
 
@@ -97,7 +98,7 @@ def _add_parameter_sets(
     db: Database[Any],
     instruments: list[InstrumentId],
 ) -> list[ParameterSetId]:
-    collection = db.get_collection("parameter_sets")
+    collection = db.get_collection("parameterSets")
     collection.delete_many({})
     return collection.insert_many(
         [
@@ -246,12 +247,154 @@ class Experiment(BaseModel):
     dataset_name: str = Field(alias="datasetName")
     status: str
     title: str
-    parameter_set: ParameterSetId
+    parameter_set: ParameterSetId = Field(alias="parameterSet")
     exp_no: str = Field(alias="expNo")
     holder: str
     data_path: Path = Field(alias="dataPath")
-    sovlent: str
-    submitted_at: datetime | None = Field(default=None, alias="submittedAt")
+    solvent: str
+    submitte_at: datetime | None = Field(default=None, alias="submittedAt")
+
+
+def _add_experiments(
+    db: Database[Any],
+    instruments: list[InstrumentId],
+    groups: list[GroupId],
+    users: list[UserId],
+    datastore: Path,
+) -> list[ExperimentId]:
+    collection = db.get_collection("experiments")
+    collection.delete_many({})
+    experiments = [
+        Experiment(
+            expId="2106231050-2-1-test1-10",
+            instrument=InstrumentInfo(id=instruments[0], name="instrument-1"),
+            user=UserInfo(id=users[0], username="test1"),
+            group=GroupInfo(id=groups[0], name="group-1"),
+            datasetName="2106231050-2-1-test1",
+            status="Archived",
+            title="Test Exp 1",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="10",
+            holder="2",
+            dataPath=datastore / "2106231050-2-1-test1-10",
+            solvent="CDCl3",
+            submittedAt=None,
+        ),
+        Experiment(
+            expId="2106231050-2-1-test1-11",
+            instrument=InstrumentInfo(id=instruments[0], name="instrument-1"),
+            user=UserInfo(id=users[0], username="test1"),
+            group=GroupInfo(id=groups[0], name="group-1"),
+            datasetName="2106231050-2-1-test1",
+            status="Archived",
+            title="Test Exp 1",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="11",
+            holder="2",
+            dataPath=datastore / "2106231050-2-1-test1-11",
+            solvent="CDCl3",
+            submittedAt=None,
+        ),
+        Experiment(
+            expId="2106231055-3-2-test2-10",
+            instrument=InstrumentInfo(id=instruments[1], name="instrument-2"),
+            user=UserInfo(id=users[1], username="test2"),
+            group=GroupInfo(id=groups[0], name="group-1"),
+            datasetName="2106231055-3-2-test2",
+            status="Archived",
+            title="Test Exp 3",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="10",
+            holder="3",
+            dataPath=datastore / "2106231055-3-2-test2-10",
+            solvent="C6D6",
+            submittedAt=None,
+        ),
+        Experiment(
+            expId="2106231100-10-2-test3-10",
+            instrument=InstrumentInfo(id=instruments[2], name="instrument-2"),
+            user=UserInfo(id=users[2], username="test3"),
+            group=GroupInfo(id=groups[0], name="group-1"),
+            datasetName="2106231100-10-2-test3",
+            status="Archived",
+            title="Test Exp 4",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="10",
+            holder="10",
+            dataPath=datastore / "2106231100-10-2-test3-10",
+            solvent="C6D6",
+            submittedAt=None,
+        ),
+        Experiment(
+            expId="2106240012-10-2-test2-10",
+            instrument=InstrumentInfo(id=instruments[2], name="instrument-3"),
+            user=UserInfo(id=users[2], username="test3"),
+            group=GroupInfo(id=groups[0], name="group-1"),
+            datasetName="2106240012-10-2-test2",
+            status="Available",
+            title="Test Exp 5",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="10",
+            holder="10",
+            dataPath=datastore / "2106240012-10-2-test2-10",
+            solvent="C6D6",
+            submittedAt=None,
+        ),
+        Experiment(
+            expId="2106241100-10-2-test3-10",
+            instrument=InstrumentInfo(id=instruments[2], name="instrument-3"),
+            user=UserInfo(id=users[2], username="test3"),
+            group=GroupInfo(id=groups[1], name="group-2"),
+            datasetName="2106241100-10-2-test3",
+            status="Archived",
+            title="Test Exp 6",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="10",
+            holder="10",
+            dataPath=datastore / "2106241100-10-2-test3-10",
+            solvent="CDCl3",
+            submittedAt=None,
+        ),
+        Experiment(
+            expId="2106241100-10-2-test4-1",
+            instrument=InstrumentInfo(id=instruments[2], name="instrument-3"),
+            user=UserInfo(id=users[2], username="test3"),
+            group=GroupInfo(id=groups[1], name="group-2"),
+            datasetName="2106241100-10-2-test4",
+            status="Archived",
+            title="Test Exp 7",
+            parameterSet=ParameterSetId(
+                ObjectId.from_datetime(datetime.now(UTC))
+            ),
+            expNo="1",
+            holder="11",
+            dataPath=datastore / "2106241100-10-2-test4-1",
+            solvent="CDCl3",
+            submittedAt=datetime(2024, 1, 1, 0, 0, 0, tzinfo=UTC),
+        ),
+    ]
+    ids = collection.insert_many(experiments).inserted_ids
+    for experiment in experiments:
+        with (
+            zipfile.ZipFile(
+                datastore.joinpath(f"{experiment.exp_id}.zip"), "w"
+            ) as archive,
+            archive.open(f"{experiment.exp_id}.json", "w") as f,
+        ):
+            f.write(experiment.model_dump_json().encode())
+    return ids
 
 
 def _parse_args() -> argparse.Namespace:
