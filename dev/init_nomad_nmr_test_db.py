@@ -1,6 +1,7 @@
 """Populate a test NOMAD NMR database with data."""
 
 import argparse
+from datetime import datetime
 from pathlib import Path
 from typing import Any, NewType
 
@@ -20,7 +21,7 @@ def main() -> None:
     _add_parameter_sets(db, instruments)
     groups = _add_groups(db)
     users = _add_users(db, groups)
-    add_experiments(db, instruments, groups, users, args.datastore)
+    _add_experiments(db, instruments, groups, users, args.datastore)
 
 
 InstrumentId = NewType("InstrumentId", ObjectId)
@@ -208,6 +209,49 @@ def _add_users(db: Database[Any], groups: list[GroupId]) -> list[UserId]:
             ),
         ]
     ).inserted_ids
+
+
+ExperimentId = NewType("ExperimentId", ObjectId)
+
+
+class InstrumentInfo(BaseModel):
+    """Information about an instrument."""
+
+    id: InstrumentId
+    name: str
+
+
+class UserInfo(BaseModel):
+    """Information about a user."""
+
+    id: UserId
+    username: str
+
+
+class GroupInfo(BaseModel):
+    """Information about a group."""
+
+    id: GroupId
+    name: str
+
+
+class Experiment(BaseModel):
+    """An experiment."""
+
+    id: ExperimentId | None = None
+    exp_id: str = Field(alias="expId")
+    instrument: InstrumentInfo
+    user: UserInfo
+    group: GroupInfo
+    dataset_name: str = Field(alias="datasetName")
+    status: str
+    title: str
+    parameter_set: ParameterSetId
+    exp_no: str = Field(alias="expNo")
+    holder: str
+    data_path: Path = Field(alias="dataPath")
+    sovlent: str
+    submitted_at: datetime | None = Field(default=None, alias="submittedAt")
 
 
 def _parse_args() -> argparse.Namespace:
