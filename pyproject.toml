@@ -9,16 +9,16 @@ maintainers = [
 ]
 
 dependencies = [
-    "pydantic>=2.9.2",
-    "requests>=2.32.3",
-    "types-requests>=2.32.0.20241016",
+  "pydantic>=2.9.2",
+  "requests>=2.32.3",
+  "types-requests>=2.32.0.20241016",
 ]
 requires-python = ">=3.12"
 dynamic = ["version"]
 readme = "README.rst"
 description = "Make AI in chemistry simple!"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
   "ruff",
   "mypy",
@@ -28,6 +28,7 @@ dev = [
   "sphinx-copybutton",
   "furo",
   "pymongo>=4.10.1",
+  "bson>=0.5.10",
 ]
 
 [project.urls]
