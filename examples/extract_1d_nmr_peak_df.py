@@ -4,12 +4,17 @@
 import argparse
 from pathlib import Path
 
+import polars as pl
+
 from aitomic import bruker
 
 
 def main() -> None:
     """Run the example."""
     args = _parse_args()
+    pl.Config.set_fmt_str_lengths(1000)
+    pl.Config.set_tbl_cols(-1)
+    pl.Config.set_tbl_rows(-1)
     peak_df = bruker.nmr_peaks_df_1d(
         args.zip_file.read_bytes(),
         peak_threshold=args.peak_threshold,
