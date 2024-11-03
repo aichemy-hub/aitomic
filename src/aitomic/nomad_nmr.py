@@ -82,6 +82,10 @@ Examples:
 
         os.chdir(pwd)
 
+    .. seealso::
+
+        * :func:`.bruker.nmr_peaks_df_1d`: For additional documentation.
+
     .. _downloading-experiment-data:
 
     **Downloading experiment data**
@@ -124,6 +128,13 @@ Examples:
 
         os.chdir(pwd)
 
+    .. seealso::
+
+        * :meth:`.nomad_nmr.Client.login`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
+          documentation.
 
     .. _downloading-experiment-data-query:
 
@@ -171,6 +182,15 @@ Examples:
     .. testcleanup:: downloading-experiment-data
 
         os.chdir(pwd)
+
+    .. seealso::
+
+        * :meth:`.nomad_nmr.Client.login`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
+          documentation.
+        * :class:`.AutoExperimentQuery`: For additional documentation.
 
     .. _additional-filtering:
 
@@ -227,6 +247,15 @@ Examples:
     .. testcleanup:: additional-filtering
 
         os.chdir(pwd)
+
+    .. seealso::
+
+        * :meth:`.nomad_nmr.Client.login`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
+          documentation.
+        * :class:`.AutoExperimentQuery`: For additional documentation.
 
 """
 
