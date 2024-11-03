@@ -35,10 +35,11 @@ def nmr_peaks_df_1d(
         spectra = []
         for binary_file in tmp.glob("**/1r"):
             spectrum_dir = binary_file.parent
+            spectrum_label = str(spectrum_dir.relative_to(tmp))
             for peak in _pick_peaks(spectrum_dir, peak_threshold):
                 ppms.append(peak.ppm)
                 volumes.append(peak.volume)
-                spectra.append(spectrum_dir.name)
+                spectra.append(spectrum_label)
         return pl.DataFrame(
             {
                 "spectrum": spectra,
