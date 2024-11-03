@@ -33,7 +33,8 @@ def nmr_peaks_df_1d(
         ppms = []
         volumes = []
         spectra = []
-        for spectrum_dir in tmp.glob("*"):
+        for binary_file in tmp.glob("**/1r"):
+            spectrum_dir = binary_file.parent
             for peak in _pick_peaks(spectrum_dir, peak_threshold):
                 ppms.append(peak.ppm)
                 volumes.append(peak.volume)
