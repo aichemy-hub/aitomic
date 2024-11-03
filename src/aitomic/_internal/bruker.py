@@ -2,6 +2,7 @@ import tempfile
 import zipfile
 from collections.abc import Iterator
 from dataclasses import dataclass
+from io import BytesIO
 from pathlib import Path
 
 import nmrglue
@@ -28,14 +29,11 @@ def nmr_peaks_df_1d(
     """
     with tempfile.TemporaryDirectory() as tmp_:
         tmp = Path(tmp_)
-        with tmp.joinpath("spectra.zip").open("wb") as f:
-            f.write(zip_file)
-        spectra_dir = tmp / "spectra"
-        zipfile.ZipFile(tmp).extractall(spectra_dir)
+        zipfile.ZipFile(BytesIO(zip_file)).extractall(tmp)
         ppms = []
         volumes = []
         spectra = []
-        for spectrum_dir in spectra_dir.glob("*"):
+        for spectrum_dir in tmp.glob("*"):
             for peak in _pick_peaks(spectrum_dir, peak_threshold):
                 ppms.append(peak.ppm)
                 volumes.append(peak.volume)
