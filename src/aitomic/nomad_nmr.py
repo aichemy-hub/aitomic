@@ -85,6 +85,11 @@ Examples:
     .. seealso::
 
         * :func:`.bruker.nmr_peaks_df_1d`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.login`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
+          documentation.
 
     .. _downloading-experiment-data:
 
