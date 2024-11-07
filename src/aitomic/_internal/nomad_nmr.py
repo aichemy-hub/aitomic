@@ -370,6 +370,3 @@ class Client:
                 for experiment in response.json()
             ],
         )
-
-    def datasets(self, query: DatasetQuery | None = None) -> Datasets:
-        pass
