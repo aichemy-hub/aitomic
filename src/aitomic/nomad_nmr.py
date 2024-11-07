@@ -305,7 +305,7 @@ Examples:
           documentation.
         * :class:`.AutoExperimentQuery`: For additional documentation.
 
-"""
+"""  # noqa: E501
 
 from aitomic._internal.nomad_nmr import (
     AuthToken,
