@@ -90,6 +90,10 @@ Examples:
 
     **Gettting auto experiment data as a data frame**
 
+    This example shows you have to get all the data held by
+    :class:`.AutoExperiments` as a data frame, note taht this does not
+    download the spectrum data itself:
+
     .. testsetup:: viewing-experiment-data
 
         from aitomic import nomad_nmr
