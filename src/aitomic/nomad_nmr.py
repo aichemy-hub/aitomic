@@ -91,7 +91,7 @@ Examples:
     **Gettting auto experiment data as a data frame**
 
     This example shows you have to get all the data held by
-    :class:`.AutoExperiments` as a data frame, note taht this does not
+    :class:`.AutoExperiments` as a data frame, note that this does not
     download the spectrum data itself:
 
     .. testsetup:: viewing-experiment-data
@@ -191,8 +191,6 @@ Examples:
         │ 2106241100-10-2-test3-10 ┆ 2106241100-10-2-test3 ┆ 10                ┆ parameter-set-3 ┆ null       ┆ Test Exp 6 ┆ 672658eff9f290068dc027bf ┆ 672658eff9f290068dc027c7 ┆ 672658eff9f290068dc027c4 ┆ CDCl3   ┆ null                    │
         │ 2106241100-10-2-test4-1  ┆ 2106241100-10-2-test4 ┆ 1                 ┆ parameter-set-3 ┆ null       ┆ Test Exp 7 ┆ 672658eff9f290068dc027bf ┆ 672658eff9f290068dc027c7 ┆ 672658eff9f290068dc027c4 ┆ CDCl3   ┆ 2024-01-01 00:00:00 UTC │
         └──────────────────────────┴───────────────────────┴───────────────────┴─────────────────┴────────────┴────────────┴──────────────────────────┴──────────────────────────┴──────────────────────────┴─────────┴─────────────────────────┘
-
-
 
     In addition to users, you can also do this process with instruments and groups!
 
