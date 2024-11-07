@@ -297,7 +297,7 @@ class User:
     username: str
     """The username."""
     group: str
-    """The group the user belongs to."""
+    """The id of the group the user belongs to."""
 
 
 @dataclass(slots=True)
@@ -458,4 +458,19 @@ class Client:
             * :ref:`Joining data frames <joining-data-frames>`
 
         """
-        raise NotImplementedError
+        response = requests.get(
+            f"{self.url}/api/admin/users",
+            headers={"Authorization": f"Bearer {self.auth_token.token}"},
+            timeout=self.timeout,
+        )
+        response.raise_for_status()
+        return Users(
+            inner=[
+                User(
+                    id=user["_id"],
+                    username=user["username"],
+                    group=user["group"]["_id"],
+                )
+                for user in response.json()["users"]
+            ]
+        )
