@@ -281,6 +281,47 @@ def to_query(query: AutoExperimentQuery) -> Iterator[tuple[str, str]]:
                 yield key, value
 
 
+@dataclass(slots=True, kw_only=True)
+class User:
+    """Data about a NOMAD user.
+
+    Parameters:
+        id: The user id.
+        username: The username.
+        group: The group the user belongs to.
+
+    """
+
+    id: str
+    """The user id."""
+    username: str
+    """The username."""
+    group: str
+    """The group the user belongs to."""
+
+
+@dataclass(slots=True)
+class Users:
+    """A collection of users."""
+
+    inner: list[User]
+
+    def to_df(self) -> pl.DataFrame:
+        """Convert the users into a data frame.
+
+        Examples:
+            * :ref:`Joining data frames <joining-data-frames>`
+
+        """
+        return pl.DataFrame(
+            {
+                "id": [user.id for user in self.inner],
+                "username": [user.username for user in self.inner],
+                "group": [user.group for user in self.inner],
+            }
+        )
+
+
 @dataclass(slots=True)
 class Client:
     """Client for interacting with a NOMAD server.
@@ -409,3 +450,11 @@ class Client:
                 for experiment in response.json()
             ],
         )
+
+    def users(self) -> Users:
+        """Get the users on the server.
+
+        Examples:
+            * :ref:`Joining data frames <joining-data-frames>`
+
+        """
