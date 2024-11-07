@@ -56,12 +56,7 @@ Examples:
             password="dem0User",
         )
         experiments = client.auto_experiments()
-        peak_df = bruker.peaks_df_1d(experiments.download())
-
-    .. testcode:: getting-peak-df
-        :hide:
-
-        print(peak_df)
+        peak_df = bruker.nmr_peaks_df_1d(experiments.download())
 
     ::
 
@@ -91,9 +86,43 @@ Examples:
         * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
           documentation.
 
+    .. _viewing-experiment-data:
+
+    **Gettting auto experiment data as a data frame**
+
+    .. testsetup:: viewing-experiment-data
+
+        from aitomic import nomad_nmr
+        import os
+
+        client = nomad_nmr.Client.login(
+            os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
+            username="admin",
+            password="foo",
+        )
+
+    .. testcode:: viewing-experiment-data
+
+        experiments = client.auto_experiments()
+        print(experiments.to_df())
+
+
+    .. testoutput:: viewing-experiment-data
+
+        hi
+
+
+    .. seealso::
+
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.AutoExperiments.to_df`: For additional
+          documentation.
+
+
     .. _downloading-experiment-data:
 
-    **Downloading experiment data**
+    **Downloading auto experiment data**
 
     .. testsetup:: downloading-experiment-data
 
@@ -143,7 +172,7 @@ Examples:
 
     .. _downloading-experiment-data-query:
 
-    **Downloading experiment data matching a query**
+    **Downloading auto experiment data matching a query**
 
     .. testsetup:: downloading-experiment-data-query
 

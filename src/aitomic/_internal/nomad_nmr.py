@@ -2,6 +2,7 @@ from collections.abc import Iterator
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 
+import polars as pl
 import requests
 from pydantic import BaseModel, Field
 
@@ -134,7 +135,10 @@ class AutoExperiments:
 
     Examples:
         * :ref:`Getting an NMR peak data frame <getting-peak-df>`
-        * :ref:`Downloading experiment data <downloading-experiment-data>`
+        * :ref:`Downloading auto experiment data <downloading-experiment-data>`
+        * :ref:`Getting auto experiment data as a data frame
+            <viewing-experiment-data>`
+
 
     Parameters:
         client: The client to use for requests.
@@ -178,6 +182,42 @@ class AutoExperiments:
     def __len__(self) -> int:
         """Get the number of experiments."""
         return len(self.inner)
+
+    def to_df(self) -> pl.DataFrame:
+        """Convert the experiment data into a data frame.
+
+        Examples:
+            * :ref:`Getting auto experiment data as a data frame
+              <viewing-experiment-data>`
+
+        """
+        return pl.DataFrame(
+            {
+                "id": [experiment.id for experiment in self.inner],
+                "dataset_name": [
+                    experiment.dataset_name for experiment in self.inner
+                ],
+                "experiment_number": [
+                    experiment.experiment_number for experiment in self.inner
+                ],
+                "parameter_set": [
+                    experiment.parameter_set for experiment in self.inner
+                ],
+                "parameters": [
+                    experiment.parameters for experiment in self.inner
+                ],
+                "title": [experiment.title for experiment in self.inner],
+                "instrument": [
+                    experiment.instrument for experiment in self.inner
+                ],
+                "user": [experiment.user for experiment in self.inner],
+                "group": [experiment.group for experiment in self.inner],
+                "solvent": [experiment.solvent for experiment in self.inner],
+                "submitted_at": [
+                    experiment.submitted_at for experiment in self.inner
+                ],
+            }
+        )
 
 
 @dataclass(slots=True, kw_only=True)
