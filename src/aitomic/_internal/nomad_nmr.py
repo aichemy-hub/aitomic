@@ -206,11 +206,11 @@ class AutoExperiments:
                     experiment.parameters for experiment in self.inner
                 ],
                 "title": [experiment.title for experiment in self.inner],
-                "instrument": [
+                "instrument_id": [
                     experiment.instrument for experiment in self.inner
                 ],
-                "user": [experiment.user for experiment in self.inner],
-                "group": [experiment.group for experiment in self.inner],
+                "user_id": [experiment.user for experiment in self.inner],
+                "group_id": [experiment.group for experiment in self.inner],
                 "solvent": [experiment.solvent for experiment in self.inner],
                 "submitted_at": [
                     experiment.submitted_at for experiment in self.inner

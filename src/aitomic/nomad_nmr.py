@@ -104,13 +104,13 @@ Examples:
     .. testcode:: viewing-experiment-data
 
         experiments = client.auto_experiments()
-        print(experiments.to_df())
+        df = experiments.to_df()
 
 
-    .. testoutput:: viewing-experiment-data
+    ::
 
         ┌──────────────────────────┬───────────────────────┬───────────────────┬─────────────────┬────────────┬────────────┬──────────────────────────┬──────────────────────────┬──────────────────────────┬─────────┬─────────────────────────┐
-        │ id                       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ instrument               ┆ user                     ┆ group                    ┆ solvent ┆ submitted_at            │
+        │ id                       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ instrument_id            ┆ user_id                  ┆ group_id                 ┆ solvent ┆ submitted_at            │
         │ ---                      ┆ ---                   ┆ ---               ┆ ---             ┆ ---        ┆ ---        ┆ ---                      ┆ ---                      ┆ ---                      ┆ ---     ┆ ---                     │
         │ str                      ┆ str                   ┆ str               ┆ str             ┆ null       ┆ str        ┆ str                      ┆ str                      ┆ str                      ┆ str     ┆ datetime[μs, UTC]       │
         ╞══════════════════════════╪═══════════════════════╪═══════════════════╪═════════════════╪════════════╪════════════╪══════════════════════════╪══════════════════════════╪══════════════════════════╪═════════╪═════════════════════════╡
