@@ -38,13 +38,13 @@ def nmr_peaks_df_1d(
             spectrum_label = str(spectrum_dir.relative_to(tmp))
             for peak in _pick_peaks(spectrum_dir, peak_threshold):
                 ppms.append(peak.ppm)
-                volumes.append(peak.volume)
+                volumes.append(peak.integral)
                 spectra.append(spectrum_label)
         return pl.DataFrame(
             {
                 "spectrum": spectra,
                 "ppm": ppms,
-                "volume": volumes,
+                "integral": volumes,
             }
         )
 
@@ -52,7 +52,7 @@ def nmr_peaks_df_1d(
 @dataclass(slots=True, frozen=True)
 class NmrPeak:
     ppm: float
-    volume: float
+    integral: float
 
 
 def _pick_peaks(
