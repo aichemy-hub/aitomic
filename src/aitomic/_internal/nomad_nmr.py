@@ -458,3 +458,4 @@ class Client:
             * :ref:`Joining data frames <joining-data-frames>`
 
         """
+        raise NotImplementedError
