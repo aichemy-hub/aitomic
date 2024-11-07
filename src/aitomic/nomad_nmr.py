@@ -378,6 +378,8 @@ from aitomic._internal.nomad_nmr import (
     AutoExperimentQuery,
     AutoExperiments,
     Client,
+    User,
+    Users,
 )
 
 __all__ = [
@@ -386,4 +388,6 @@ __all__ = [
     "AutoExperimentQuery",
     "AutoExperiments",
     "Client",
+    "User",
+    "Users",
 ]
