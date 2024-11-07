@@ -133,6 +133,76 @@ Examples:
         * :meth:`.nomad_nmr.AutoExperiments.to_df`: For additional
           documentation.
 
+    .. _joining-data-frames:
+
+    **Joining data frames**
+
+    Sometimes you may have two different data frames but want to join their data.
+    For example, if you use :meth:`.nomad_nmr.AutoExperiments.to_df` you will have a
+    data frame with all the user ids. However, you will probably want to filter data
+    not by the user id but by the username. First lets create a data frame of auto
+    experiments:
+
+    .. testsetup:: joining-data-frames
+
+        from aitomic import nomad_nmr
+        import os
+
+        client = nomad_nmr.Client.login(
+            os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
+            username="admin",
+            password="foo",
+        )
+
+    .. testcode:: viewing-experiment-data
+
+        experiments = client.auto_experiments().to_df()
+
+    Then lets create a data frame of user data:
+
+    .. testcode:: joining-data-frames
+
+        users = client.users().to_df()
+
+    and join the two data frames:
+
+    .. testcode:: joining-data-frames
+
+        experiments = experiments.join(users, on="user_id")
+
+    Now we can filter the data frame by the username:
+
+    .. testcode:: joining-data-frames
+
+        experiments.filter(pl.col("username") == "test1")
+
+    ::
+
+        ┌──────────────────────────┬───────────────────────┬───────────────────┬─────────────────┬────────────┬────────────┬──────────────────────────┬──────────────────────────┬──────────────────────────┬─────────┬─────────────────────────┐
+        │ id                       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ instrument_id            ┆ user_id                  ┆ group_id                 ┆ solvent ┆ submitted_at            │
+        │ ---                      ┆ ---                   ┆ ---               ┆ ---             ┆ ---        ┆ ---        ┆ ---                      ┆ ---                      ┆ ---                      ┆ ---     ┆ ---                     │
+        │ str                      ┆ str                   ┆ str               ┆ str             ┆ null       ┆ str        ┆ str                      ┆ str                      ┆ str                      ┆ str     ┆ datetime[μs, UTC]       │
+        ╞══════════════════════════╪═══════════════════════╪═══════════════════╪═════════════════╪════════════╪════════════╪══════════════════════════╪══════════════════════════╪══════════════════════════╪═════════╪═════════════════════════╡
+        │ 2106231050-2-1-test1-10  ┆ 2106231050-2-1-test1  ┆ 10                ┆ parameter-set-1 ┆ null       ┆ Test Exp 1 ┆ 672658eff9f290068dc027bd ┆ 672658eff9f290068dc027c5 ┆ 672658eff9f290068dc027c3 ┆ CDCl3   ┆ null                    │
+        │ 2106231050-2-1-test1-11  ┆ 2106231050-2-1-test1  ┆ 11                ┆ parameter-set-1 ┆ null       ┆ Test Exp 1 ┆ 672658eff9f290068dc027bd ┆ 672658eff9f290068dc027c5 ┆ 672658eff9f290068dc027c3 ┆ CDCl3   ┆ null                    │
+        │ 2106231055-3-2-test2-10  ┆ 2106231055-3-2-test2  ┆ 10                ┆ parameter-set-2 ┆ null       ┆ Test Exp 3 ┆ 672658eff9f290068dc027be ┆ 672658eff9f290068dc027c6 ┆ 672658eff9f290068dc027c3 ┆ C6D6    ┆ null                    │
+        │ 2106231100-10-2-test3-10 ┆ 2106231100-10-2-test3 ┆ 10                ┆ parameter-set-3 ┆ null       ┆ Test Exp 4 ┆ 672658eff9f290068dc027bf ┆ 672658eff9f290068dc027c7 ┆ 672658eff9f290068dc027c3 ┆ C6D6    ┆ null                    │
+        │ 2106240012-10-2-test2-10 ┆ 2106240012-10-2-test2 ┆ 10                ┆ parameter-set-3 ┆ null       ┆ Test Exp 5 ┆ 672658eff9f290068dc027bf ┆ 672658eff9f290068dc027c7 ┆ 672658eff9f290068dc027c3 ┆ C6D6    ┆ null                    │
+        │ 2106241100-10-2-test3-10 ┆ 2106241100-10-2-test3 ┆ 10                ┆ parameter-set-3 ┆ null       ┆ Test Exp 6 ┆ 672658eff9f290068dc027bf ┆ 672658eff9f290068dc027c7 ┆ 672658eff9f290068dc027c4 ┆ CDCl3   ┆ null                    │
+        │ 2106241100-10-2-test4-1  ┆ 2106241100-10-2-test4 ┆ 1                 ┆ parameter-set-3 ┆ null       ┆ Test Exp 7 ┆ 672658eff9f290068dc027bf ┆ 672658eff9f290068dc027c7 ┆ 672658eff9f290068dc027c4 ┆ CDCl3   ┆ 2024-01-01 00:00:00 UTC │
+        └──────────────────────────┴───────────────────────┴───────────────────┴─────────────────┴────────────┴────────────┴──────────────────────────┴──────────────────────────┴──────────────────────────┴─────────┴─────────────────────────┘
+
+
+
+    In addition to users, you can also do this process with instruments and groups!
+
+    .. seealso::
+
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.Client.users`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.instruments`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.groups`: For additional documentation.
 
     .. _downloading-experiment-data:
 
