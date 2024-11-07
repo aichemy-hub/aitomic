@@ -136,9 +136,8 @@ class AutoExperiments:
     Examples:
         * :ref:`Getting an NMR peak data frame <getting-peak-df>`
         * :ref:`Downloading auto experiment data <downloading-experiment-data>`
-        * :ref:`Getting auto experiment data as a data frame
+        * :ref:`Getting auto experiment data as a data frame \
             <viewing-experiment-data>`
-
 
     Parameters:
         client: The client to use for requests.
@@ -187,7 +186,7 @@ class AutoExperiments:
         """Convert the experiment data into a data frame.
 
         Examples:
-            * :ref:`Getting auto experiment data as a data frame
+            * :ref:`Getting auto experiment data as a data frame \
               <viewing-experiment-data>`
 
         """
