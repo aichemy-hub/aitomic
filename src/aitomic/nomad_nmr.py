@@ -86,6 +86,57 @@ Examples:
         * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
           documentation.
 
+    .. _downloading-experiment-data:
+
+    **Downloading auto experiment data**
+
+    .. testsetup:: downloading-experiment-data
+
+        from aitomic import nomad_nmr
+        import tempfile
+        import os
+
+        tmp = tempfile.TemporaryDirectory()
+        pwd = os.getcwd()
+        os.chdir(tmp.name)
+
+        def change_url(func):
+            def wrapper(url, username, password):
+                return func(
+                    os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
+                    username="admin",
+                    password="foo",
+                )
+            return wrapper
+
+        nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
+
+    .. testcode:: downloading-experiment-data
+
+        from aitomic import nomad_nmr
+        from pathlib import Path
+
+        client = nomad_nmr.Client.login(
+            "http://demo.nomad-nmr.uk",
+            username="demo",
+            password="dem0User",
+        )
+        experiments = client.auto_experiments()
+        Path("experiments.zip").write_bytes(experiments.download())
+
+    .. testcleanup:: downloading-experiment-data
+
+        os.chdir(pwd)
+
+    .. seealso::
+
+        * :meth:`.nomad_nmr.Client.login`: For additional documentation.
+        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
+          documentation.
+        * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
+          documentation.
+
+
     .. _viewing-experiment-data:
 
     **Gettting auto experiment data as a data frame**
@@ -197,56 +248,6 @@ Examples:
         * :meth:`.nomad_nmr.Client.users`: For additional documentation.
         * :meth:`.nomad_nmr.Client.instruments`: For additional documentation.
         * :meth:`.nomad_nmr.Client.groups`: For additional documentation.
-
-    .. _downloading-experiment-data:
-
-    **Downloading auto experiment data**
-
-    .. testsetup:: downloading-experiment-data
-
-        from aitomic import nomad_nmr
-        import tempfile
-        import os
-
-        tmp = tempfile.TemporaryDirectory()
-        pwd = os.getcwd()
-        os.chdir(tmp.name)
-
-        def change_url(func):
-            def wrapper(url, username, password):
-                return func(
-                    os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
-                    username="admin",
-                    password="foo",
-                )
-            return wrapper
-
-        nomad_nmr.Client.login = change_url(nomad_nmr.Client.login)
-
-    .. testcode:: downloading-experiment-data
-
-        from aitomic import nomad_nmr
-        from pathlib import Path
-
-        client = nomad_nmr.Client.login(
-            "http://demo.nomad-nmr.uk",
-            username="demo",
-            password="dem0User",
-        )
-        experiments = client.auto_experiments()
-        Path("experiments.zip").write_bytes(experiments.download())
-
-    .. testcleanup:: downloading-experiment-data
-
-        os.chdir(pwd)
-
-    .. seealso::
-
-        * :meth:`.nomad_nmr.Client.login`: For additional documentation.
-        * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
-          documentation.
-        * :meth:`.nomad_nmr.AutoExperiments.download`: For additional
-          documentation.
 
     .. _downloading-experiment-data-query:
 
