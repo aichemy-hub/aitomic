@@ -408,6 +408,12 @@ class Client:
         Examples:
             * :ref:`Downloading experiment data <downloading-experiment-data>`
 
+        Parameters:
+            url: The URL of the NOMAD server.
+            username: The username to use for authentication.
+            password: The password to use for authentication.
+            timeout: The timeout for requests.
+
         Raises:
             requests.HTTPError: If the login request fails.
 
