@@ -1,24 +1,37 @@
 import os
 
+import polars as pl
+
 from aitomic import nomad_nmr
 
 
-def test_users() -> None:
+def test_user_data_requests() -> None:
     client = nomad_nmr.Client.login(
         os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
         username="admin",
         password="foo",  # noqa: S106
     )
-    users = client.users()
-    assert users == [
-        nomad_nmr.User(
-            id="",
-            username="test1",
-            group="",
-        ),
-        nomad_nmr.User(
-            id="6c0f7e0e-a2d7-4f9c-b9f0-f4b0a3f1f3e9",
-            username="test1",
-            group="test-admins",
-        ),
-    ]
+    users = (
+        client.users()
+        .to_df()
+        .join(client.groups().to_df(), on="group_id")
+        .drop("id", "group_id")
+        .sort("username")
+    )
+    expected = pl.DataFrame(
+        {
+            "username": [
+                "admin",
+                "test1",
+                "test2",
+                "test3",
+            ],
+            "group_name": [
+                "default",
+                "group-1",
+                "group-1",
+                "test-admins",
+            ],
+        }
+    ).sort("username")
+    assert users.equals(expected)

@@ -302,7 +302,12 @@ class User:
 
 @dataclass(slots=True)
 class Users:
-    """A collection of users."""
+    """A collection of users.
+
+    Examples:
+        * :ref:`Joining data frames <joining-data-frames>`
+
+    """
 
     inner: list[User]
 
@@ -317,7 +322,49 @@ class Users:
             {
                 "id": [user.id for user in self.inner],
                 "username": [user.username for user in self.inner],
-                "group": [user.group for user in self.inner],
+                "group_id": [user.group for user in self.inner],
+            }
+        )
+
+
+@dataclass(slots=True, kw_only=True)
+class Group:
+    """Data about a NOMAD group.
+
+    Parameters:
+        id: The group id.
+        name: The name of the group.
+
+    """
+
+    id: str
+    """The group id."""
+    name: str
+    """The name of the group."""
+
+
+@dataclass(slots=True)
+class Groups:
+    """A collection of groups.
+
+    Examples:
+        * :ref:`Joining data frames <joining-data-frames>`
+
+    """
+
+    inner: list[Group]
+
+    def to_df(self) -> pl.DataFrame:
+        """Convert the groups into a data frame.
+
+        Examples:
+            * :ref:`Joining data frames <joining-data-frames>`
+
+        """
+        return pl.DataFrame(
+            {
+                "group_id": [group.id for group in self.inner],
+                "group_name": [group.name for group in self.inner],
             }
         )
 
@@ -472,5 +519,28 @@ class Client:
                     group=user["group"]["_id"],
                 )
                 for user in response.json()["users"]
+            ]
+        )
+
+    def groups(self) -> Groups:
+        """Get the groups on the server.
+
+        Examples:
+            * :ref:`Joining data frames <joining-data-frames>`
+
+        """
+        response = requests.get(
+            f"{self.url}/api/admin/groups",
+            headers={"Authorization": f"Bearer {self.auth_token.token}"},
+            timeout=self.timeout,
+        )
+        response.raise_for_status()
+        return Groups(
+            inner=[
+                Group(
+                    id=group["_id"],
+                    name=group["groupName"],
+                )
+                for group in response.json()
             ]
         )
