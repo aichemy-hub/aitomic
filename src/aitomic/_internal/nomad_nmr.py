@@ -574,3 +574,13 @@ class Client:
                 for group in response.json()
             ]
         )
+
+
+def add_metadata(client: Client, spectra: pl.DataFrame) -> pl.DataFrame:
+    auto_experiments = client.auto_experiments().to_df()
+    users = client.users().to_df()
+    groups = client.groups().to_df()
+
+
+def _experiment_id_from_spectrum(spectra: pl.DataFrame) -> pl.Series:
+    pass

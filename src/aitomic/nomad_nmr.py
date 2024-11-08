@@ -382,6 +382,7 @@ from aitomic._internal.nomad_nmr import (
     Groups,
     User,
     Users,
+    add_metadata,
 )
 
 __all__ = [
@@ -394,4 +395,5 @@ __all__ = [
     "Groups",
     "User",
     "Users",
+    "add_metadata",
 ]
