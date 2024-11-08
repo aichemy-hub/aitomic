@@ -192,7 +192,9 @@ class AutoExperiments:
         """
         return pl.DataFrame(
             {
-                "id": [experiment.id for experiment in self.inner],
+                "auto_experiment_id": [
+                    experiment.id for experiment in self.inner
+                ],
                 "dataset_name": [
                     experiment.dataset_name for experiment in self.inner
                 ],

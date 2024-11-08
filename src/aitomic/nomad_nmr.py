@@ -164,7 +164,7 @@ Examples:
     ::
 
         ┌──────────────────────────┬───────────────────────┬───────────────────┬─────────────────┬────────────┬────────────┬──────────────────────────┬──────────────────────────┬──────────────────────────┬─────────┬─────────────────────────┐
-        │ id                       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ instrument_id            ┆ user_id                  ┆ group_id                 ┆ solvent ┆ submitted_at            │
+        │ auto_experiment_id       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ instrument_id            ┆ user_id                  ┆ group_id                 ┆ solvent ┆ submitted_at            │
         │ ---                      ┆ ---                   ┆ ---               ┆ ---             ┆ ---        ┆ ---        ┆ ---                      ┆ ---                      ┆ ---                      ┆ ---     ┆ ---                     │
         │ str                      ┆ str                   ┆ str               ┆ str             ┆ null       ┆ str        ┆ str                      ┆ str                      ┆ str                      ┆ str     ┆ datetime[μs, UTC]       │
         ╞══════════════════════════╪═══════════════════════╪═══════════════════╪═════════════════╪════════════╪════════════╪══════════════════════════╪══════════════════════════╪══════════════════════════╪═════════╪═════════════════════════╡
@@ -230,7 +230,7 @@ Examples:
     ::
 
         ┌──────────────────────────┬───────────────────────┬───────────────────┬─────────────────┬────────────┬────────────┬──────────────────────────┬──────────────────────────┬──────────────────────────┬─────────┬─────────────────────────┐
-        │ id                       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ username                 ┆ user_id                  ┆ group_id                 ┆ solvent ┆ submitted_at            │
+        │ auto_experiment_id       ┆ dataset_name          ┆ experiment_number ┆ parameter_set   ┆ parameters ┆ title      ┆ username                 ┆ user_id                  ┆ group_id                 ┆ solvent ┆ submitted_at            │
         │ ---                      ┆ ---                   ┆ ---               ┆ ---             ┆ ---        ┆ ---        ┆ ---                      ┆ ---                      ┆ ---                      ┆ ---     ┆ ---                     │
         │ str                      ┆ str                   ┆ str               ┆ str             ┆ null       ┆ str        ┆ str                      ┆ str                      ┆ str                      ┆ str     ┆ datetime[μs, UTC]       │
         ╞══════════════════════════╪═══════════════════════╪═══════════════════╪═════════════════╪════════════╪════════════╪══════════════════════════╪══════════════════════════╪══════════════════════════╪═════════╪═════════════════════════╡
