@@ -246,6 +246,19 @@ class AutoExperimentQuery:
         * :ref:`Downloading experiment data matching a query \
             <downloading-experiment-data-query>`
 
+    Parameters:
+        solvent: Filter for experiments with any of these solvents.
+        instrument_id: Filter for experiments done on any of these instruments.
+        parameter_set: Filter for experiments using any of these parameter sets.
+        title: Filter for experiments with any of these titles.
+        start_date: Filter for experiments submitted after this date.
+        end_date: Filter for experiments submitted before this date.
+        group_id: Filter for experiments belonging to any of these groups.
+        user_id: Filter for experiments created by any of these users.
+        dataset_name: Filter for experiments in any of these datasets.
+        offset: Skip the first ``offset`` experiments.
+        limit: Limit the number of experiments returned to ``limit``.
+
     """
 
     solvent: str | list[str] | None = None
