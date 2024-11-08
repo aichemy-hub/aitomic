@@ -198,6 +198,7 @@ Examples:
 
         from aitomic import nomad_nmr
         import os
+        import polars as pl
 
         client = nomad_nmr.Client.login(
             os.environ.get("NOMAD_NMR_URL", "http://localhost:8080"),
@@ -205,7 +206,7 @@ Examples:
             password="foo",
         )
 
-    .. testcode:: viewing-experiment-data
+    .. testcode:: joining-data-frames
 
         experiments = client.auto_experiments().to_df()
 
