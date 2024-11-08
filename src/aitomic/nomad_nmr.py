@@ -239,14 +239,13 @@ Examples:
         └──────────────────────────┴───────────────────────┴───────────────────┴─────────────────┴────────────┴────────────┴──────────────────────────┴──────────────────────────┴──────────────────────────┴─────────┴─────────────────────────┘
 
 
-    In addition to users, you can also do this process with instruments and groups!
+    In addition to users, you can also do this process with groups!
 
     .. seealso::
 
         * :meth:`.nomad_nmr.Client.auto_experiments`: For additional
           documentation.
         * :meth:`.nomad_nmr.Client.users`: For additional documentation.
-        * :meth:`.nomad_nmr.Client.instruments`: For additional documentation.
         * :meth:`.nomad_nmr.Client.groups`: For additional documentation.
 
     .. _downloading-experiment-data-query:
