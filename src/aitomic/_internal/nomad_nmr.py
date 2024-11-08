@@ -249,7 +249,8 @@ class AutoExperimentQuery:
     Parameters:
         solvent: Filter for experiments with any of these solvents.
         instrument_id: Filter for experiments done on any of these instruments.
-        parameter_set: Filter for experiments using any of these parameter sets.
+        parameter_set:
+            Filter for experiments using any of these parameter sets.
         title: Filter for experiments with any of these titles.
         start_date: Filter for experiments submitted after this date.
         end_date: Filter for experiments submitted before this date.
