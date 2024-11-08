@@ -15,7 +15,7 @@ def test_user_data_requests() -> None:
         client.users()
         .to_df()
         .join(client.groups().to_df(), on="group_id")
-        .drop("id", "group_id")
+        .drop("user_id", "group_id")
         .sort("username")
     )
     expected = pl.DataFrame(

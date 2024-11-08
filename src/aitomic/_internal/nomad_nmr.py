@@ -320,7 +320,7 @@ class Users:
         """
         return pl.DataFrame(
             {
-                "id": [user.id for user in self.inner],
+                "user_id": [user.id for user in self.inner],
                 "username": [user.username for user in self.inner],
                 "group_id": [user.group for user in self.inner],
             }
