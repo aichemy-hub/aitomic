@@ -307,9 +307,13 @@ class Users:
     Examples:
         * :ref:`Joining data frames <joining-data-frames>`
 
+    Parameters:
+        inner: The users.
+
     """
 
     inner: list[User]
+    """The users."""
 
     def to_df(self) -> pl.DataFrame:
         """Convert the users into a data frame.
@@ -350,9 +354,13 @@ class Groups:
     Examples:
         * :ref:`Joining data frames <joining-data-frames>`
 
+    Parameters:
+        inner: The groups.
+
     """
 
     inner: list[Group]
+    """The groups."""
 
     def to_df(self) -> pl.DataFrame:
         """Convert the groups into a data frame.
