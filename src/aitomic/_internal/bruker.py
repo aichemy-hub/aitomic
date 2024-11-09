@@ -1,12 +1,16 @@
 import tempfile
+import warnings
 import zipfile
 from collections.abc import Iterator
 from dataclasses import dataclass
 from io import BytesIO
 from pathlib import Path
 
-import nmrglue
 import polars as pl
+
+with warnings.catch_warnings():
+    warnings.filterwarnings("ignore", category=DeprecationWarning)
+    import nmrglue
 
 
 def nmr_peaks_df_1d(
