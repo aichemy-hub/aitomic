@@ -2,7 +2,9 @@ import os
 import tempfile
 import zipfile
 
-from aitomic import nomad_nmr
+import polars as pl
+
+from aitomic import bruker, nomad_nmr
 
 
 def test_download_all() -> None:
@@ -12,24 +14,26 @@ def test_download_all() -> None:
         password="foo",  # noqa: S106
     )
     experiments = client.auto_experiments()
-    with tempfile.NamedTemporaryFile("wb") as f:
-        f.write(experiments.download())
-        f.seek(0)
-
-        expected_files = sorted(
-            [
-                "2409231309-0-2-lukasturcani-10",
-                "2409231309-0-3-lukasturcani-10",
-                "2410081201-0-1-lukasturcani-10",
-                "2410161546-0-1-admin-10",
-                "2410161546-0-1-admin-11",
+    spectra = (
+        bruker.nmr_peaks_df_1d(experiments.download())
+        .select("spectrum")
+        .unique()
+        .sort("spectrum")
+    )
+    pl.Config.set_fmt_str_lengths(1000)
+    pl.Config.set_tbl_cols(-1)
+    pl.Config.set_tbl_rows(-1)
+    expected = pl.DataFrame(
+        {
+            "spectrum": [
+                "2409231309-0-2-lukasturcani/10/pdata/1",
+                "2409231309-0-3-lukasturcani/10/pdata/1",
+                "2410081201-0-1-lukasturcani/10/pdata/1",
+                "2410161546-0-1-admin/10/pdata/1",
             ]
-        )
-        assert len(experiments) == len(expected_files)
-        with zipfile.ZipFile(f.name) as zip_file:
-            files = sorted(zip_file.namelist())
-            print(files)
-            assert files == expected_files
+        }
+    ).sort("spectrum")
+    assert spectra.equals(expected)
 
 
 def test_download_some() -> None:
