@@ -306,7 +306,7 @@ def _add_experiments(  # noqa: PLR0913
             expId="2410081201-0-1-lukasturcani-10",
             instrument=InstrumentInfo(id=instruments[2], name="instrument-3"),
             user=UserInfo(id=users[2], username="test3"),
-            group=GroupInfo(id=groups[2], name="group-3"),
+            group=GroupInfo(id=groups[1], name="group-2"),
             datasetName="2410081201-0-1-lukasturcani",
             status="Archived",
             title="Test Exp 7",
@@ -337,7 +337,7 @@ def _add_experiments(  # noqa: PLR0913
             instrument=InstrumentInfo(id=instruments[2], name="instrument-3"),
             user=UserInfo(id=users[0], username="test1"),
             group=GroupInfo(id=groups[0], name="group-1"),
-            datasetName="2410161546-0-1-admin-11",
+            datasetName="2410161546-0-1-admin",
             status="Archived",
             title="Test Exp 7",
             parameterSet=parameter_sets[1],
@@ -375,7 +375,7 @@ def _parse_args() -> argparse.Namespace:
         type=Path,
     )
     parser.add_argument(
-        "nmr-data",
+        "nmr_data",
         help="The path to the directory containing the NMR data.",
         type=Path,
     )
