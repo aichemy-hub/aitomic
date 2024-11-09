@@ -11,6 +11,5 @@ def test_nmr_peaks_df_1d() -> None:
     )
     experiments = client.auto_experiments()
     peak_df = bruker.nmr_peaks_df_1d(experiments.download())
-    peakd_df = nomad_nmr.add_metadata(client, peak_df)
-    print(peakd_df)
+    peak_df = nomad_nmr.add_metadata(client, peak_df)
     assert False
