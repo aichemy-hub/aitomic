@@ -7,13 +7,13 @@ import polars as pl
 
 from aitomic import bruker, nomad_nmr
 
-pl.Config.set_fmt_str_lengths(1000)
-pl.Config.set_tbl_cols(-1)
-pl.Config.set_tbl_rows(-1)
-
 
 def main() -> None:
     """Run the example."""
+    pl.Config.set_fmt_str_lengths(1000)
+    pl.Config.set_tbl_cols(-1)
+    pl.Config.set_tbl_rows(-1)
+
     args = _parse_args()
     client = nomad_nmr.Client.login(
         args.nomad_nmr_url,
