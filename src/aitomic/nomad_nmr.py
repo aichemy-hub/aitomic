@@ -57,6 +57,7 @@ Examples:
         )
         experiments = client.auto_experiments()
         peak_df = bruker.nmr_peaks_df_1d(experiments.download())
+        peak_df = nomad_nmr.add_metadata(client, peak_df)
 
     ::
 

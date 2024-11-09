@@ -14,5 +14,5 @@ def test_nmr_peaks_df_1d() -> None:
     experiments = client.auto_experiments()
     peak_df = bruker.nmr_peaks_df_1d(experiments.download())
     peak_df = nomad_nmr.add_metadata(client, peak_df)
-    peak_df.filter(pl.col("username") == "test1")
-    assert len(peak_df) == 3  # noqa: PLR2004
+    peak_df = peak_df.filter(pl.col("username") == "test1").unique("spectrum")
+    assert len(peak_df) == 2  # noqa: PLR2004

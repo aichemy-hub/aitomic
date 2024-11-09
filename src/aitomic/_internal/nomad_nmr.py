@@ -580,7 +580,15 @@ def add_metadata(client: Client, spectra: pl.DataFrame) -> pl.DataFrame:
     auto_experiments = client.auto_experiments().to_df()
     users = client.users().to_df()
     groups = client.groups().to_df()
-
-
-def _experiment_id_from_spectrum(spectra: pl.DataFrame) -> pl.Series:
-    pass
+    spectra = spectra.with_columns(
+        auto_experiment_id=(
+            pl.col("spectrum")
+            .str.extract(r"([^/]+/[^/]+)")
+            .str.replace("/", "-")
+        ),
+    )
+    return (
+        spectra.join(auto_experiments, on="auto_experiment_id", how="left")
+        .join(users, on="user_id", how="left")
+        .join(groups, on="group_id", how="left")
+    )
