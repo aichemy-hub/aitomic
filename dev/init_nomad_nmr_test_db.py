@@ -1,8 +1,8 @@
 """Populate a test NOMAD NMR database with data."""
 
 import argparse
-import zipfile
-from datetime import UTC, datetime
+import shutil
+from datetime import datetime
 from pathlib import Path
 from typing import Any, NewType
 
@@ -28,6 +28,7 @@ def main() -> None:
         users=users,
         parameter_sets=parameter_sets,
         datastore=args.datastore,
+        nmr_data=args.nmr_data,
     )
 
 
@@ -266,6 +267,7 @@ def _add_experiments(  # noqa: PLR0913
     users: list[UserId],
     parameter_sets: list[str],
     datastore: Path,
+    nmr_data: Path,
 ) -> list[ExperimentId]:
     collection = db.get_collection("experiments")
     collection.delete_many({})
@@ -353,13 +355,8 @@ def _add_experiments(  # noqa: PLR0913
         ).inserted_ids
     ]
     for experiment in experiments:
-        with (
-            zipfile.ZipFile(
-                datastore.joinpath(f"{experiment.dataset_name}.zip"), "w"
-            ) as archive,
-            archive.open(f"{experiment.exp_id}.json", "w") as f,
-        ):
-            f.write(f'"{experiment.exp_id}"'.encode())
+        nmr_data.joinpath(f"{experiment.dataset_name}.zip")
+        shutil.copy(nmr_data / f"{experiment.dataset_name}.zip", datastore)
     return ids
 
 
@@ -375,6 +372,11 @@ def _parse_args() -> argparse.Namespace:
     parser.add_argument(
         "datastore",
         help="The path to the NOMAD datastore.",
+        type=Path,
+    )
+    parser.add_argument(
+        "nmr-data",
+        help="The path to the directory containing the NMR data.",
         type=Path,
     )
     return parser.parse_args()
