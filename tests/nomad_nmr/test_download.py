@@ -1,6 +1,4 @@
 import os
-import tempfile
-import zipfile
 
 import polars as pl
 
@@ -14,6 +12,7 @@ def test_download_all() -> None:
         password="foo",  # noqa: S106
     )
     experiments = client.auto_experiments()
+    assert len(experiments) == 5  # noqa: PLR2004
     spectra = (
         bruker.nmr_peaks_df_1d(experiments.download())
         .select("spectrum")
