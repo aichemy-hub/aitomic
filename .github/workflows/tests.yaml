@@ -54,6 +54,7 @@ jobs:
           repository: lukasturcani/nomad-server
           path: nomad-server
           ref: lukas/open-api
+      - run: mkdir -p nomad-server/datastore
       - uses: hoverkraft-tech/compose-action@v2.0.2
         with:
           compose-file: nomad-server/docker-compose.yaml
@@ -65,8 +66,6 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
       - run: uv sync --all-extras --dev
-      - run: ls -al
-      - run: ls -al nomad-server
       - run: 
           uv run --script dev/init_nomad_nmr_test_db.py
             mongodb://localhost:27017
