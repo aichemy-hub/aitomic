@@ -72,6 +72,7 @@ jobs:
             mongodb://localhost:27017
             nomad-server/datastore
             dev/nmr-data
+      - run: ls -al nomad-server/datastore
       - run: uv run pytest --cov=src --cov-report term-missing
   doctest:
     runs-on: ubuntu-22.04
