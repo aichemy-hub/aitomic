@@ -65,6 +65,8 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
       - run: uv sync --all-extras --dev
+      - run: ls -al
+      - run: ls -al nomad-server
       - run: 
           uv run --script dev/init_nomad_nmr_test_db.py
             mongodb://localhost:27017
