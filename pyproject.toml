@@ -8,13 +8,19 @@ maintainers = [
   { name = "Lukas Turcani", email = "lukasturcani93@gmail.com" },
 ]
 
-dependencies = []
+dependencies = [
+  "nmrglue>=0.11",
+  "polars>=1.12.0",
+  "pydantic>=2.9.2",
+  "requests>=2.32.3",
+  "types-requests>=2.32.0.20241016",
+]
 requires-python = ">=3.12"
 dynamic = ["version"]
 readme = "README.rst"
 description = "Make AI in chemistry simple!"
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
   "ruff",
   "mypy",
@@ -23,6 +29,7 @@ dev = [
   "sphinx",
   "sphinx-copybutton",
   "furo",
+  "pymongo>=4.10.1",
 ]
 
 [project.urls]
@@ -42,6 +49,7 @@ ignore = ["ANN101", "ANN401", "COM812", "ISC001"]
 convention = "google"
 
 [tool.ruff.lint.per-file-ignores]
+"dev/init_nomad_nmr_test_db.py" = ["INP001"]
 "tests/*" = [
   "D100",
   "D101",
@@ -72,5 +80,8 @@ warn_unreachable = true
 disallow_any_generics = true
 
 [[tool.mypy.overrides]]
-module = []
+module = ["nmrglue.*"]
 ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--cov=src --cov-report term-missing"

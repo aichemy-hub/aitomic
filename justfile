@@ -20,19 +20,19 @@ check:
   trap error=1 ERR
 
   echo
-  (set -x; uv run ruff check src/ tests/ docs/source/ examples/ )
+  (set -x; uv run ruff check src/ tests/ docs/source/ examples/ dev/ )
   test $? = 0
 
   echo
-  ( set -x; uv run ruff format --check src/ tests/ docs/source/ examples/ )
+  ( set -x; uv run ruff format --check src/ tests/ docs/source/ examples/ dev/ )
   test $? = 0
 
   echo
-  ( set -x; uv run mypy src/ tests/ docs/source/ examples/ )
+  ( set -x; uv run mypy src/ tests/ docs/source/ examples/ dev/ )
   test $? = 0
 
   echo
-  ( set -x; uv run pytest --cov=src --cov-report term-missing )
+  ( set -x; uv run pytest )
   test $? = 0
 
   echo
@@ -43,9 +43,14 @@ check:
 
 # Auto-fix code issues.
 fix:
-  uv run ruff format src/ tests/ docs/source/ examples/
-  uv run ruff check --fix src/ tests/ docs/source/ examples/
+  uv run ruff format src/ tests/ docs/source/ examples/ dev/
+  uv run ruff check --fix src/ tests/ docs/source/ examples/ dev/
 
 # Build a release.
 build:
   uv build
+
+# Populate a MongoDB database with test data
+init_nomad_nmr_test_db nomad-datastore mongo-uri="mongodb://localhost:27017":
+  uv run --script dev/init_nomad_nmr_test_db.py \
+    {{mongo-uri}} {{nomad-datastore}} dev/nmr-data
