@@ -57,7 +57,7 @@ jobs:
       - run: mkdir -p nomad-server/datastore
       - uses: hoverkraft-tech/compose-action@v2.0.2
         with:
-          compose-file: nomad-server/docker-compose.yaml
+          cwd: nomad-server
       - uses: astral-sh/setup-uv@v3
         with: 
           enable-cache: true
