@@ -54,7 +54,7 @@ jobs:
           repository: lukasturcani/nomad-server
           path: nomad-server
           ref: lukas/open-api
-      - run: ls -al
+      - run: ls -al nomad-server
       - uses: hoverkraft-tech/compose-action@v2.0.2
         with:
           compose-file: nomad-server/docker-compose.yml
