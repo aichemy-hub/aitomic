@@ -356,7 +356,10 @@ def _add_experiments(  # noqa: PLR0913
     ]
     for experiment in experiments:
         nmr_data.joinpath(f"{experiment.exp_id}.zip")
-        shutil.copyfile(nmr_data / f"{experiment.exp_id}.zip", datastore)
+        shutil.copyfile(
+            nmr_data / f"{experiment.exp_id}.zip",
+            datastore / f"{experiment.exp_id}.zip",
+        )
     return ids
 
 
