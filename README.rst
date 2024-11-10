@@ -1,3 +1,5 @@
+:Docs: https://aitomic.readthedocs.io/en/stable/
+
 aitomic
 =======
 
