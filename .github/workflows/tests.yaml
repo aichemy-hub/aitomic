@@ -68,7 +68,7 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
       - run: uv sync --all-extras --dev
-      - run: 
+      - run:
           uv run --script dev/init_nomad_nmr_test_db.py
             mongodb://localhost:27017
             nomad-server/datastore
@@ -78,6 +78,17 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/checkout@v4
+        with:
+          repository: lukasturcani/nomad-server
+          path: nomad-server
+          ref: lukas/open-api
+      - run: mkdir -p nomad-server/datastore
+      - uses: hoverkraft-tech/compose-action@v2.0.2
+        with:
+          compose-file: "nomad-server/docker-compose.yaml"
       - uses: astral-sh/setup-uv@v3
         with: 
           enable-cache: true
@@ -86,4 +97,9 @@ jobs:
         with:
           python-version-file: "pyproject.toml"
       - run: uv sync --all-extras --dev
+      - run:
+          uv run --script dev/init_nomad_nmr_test_db.py
+            mongodb://localhost:27017
+            nomad-server/datastore
+            dev/nmr-data
       - run: uv run make -C docs doctest
