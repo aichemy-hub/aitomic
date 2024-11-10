@@ -58,6 +58,7 @@ jobs:
       - uses: hoverkraft-tech/compose-action@v2.0.2
         with:
           cwd: nomad-server
+          compose-file: "./docker-compose.yaml"
       - uses: astral-sh/setup-uv@v3
         with: 
           enable-cache: true
