@@ -5,7 +5,7 @@ AItomic
 <https://aichemy.ac.uk>`_ for making AI in chemistry simple. As a chemical
 researcher, you likely do not want to spend your time thinking about how to
 organize your data or collect it from various sources. Most likely, you want to
-do write simple function call and get access to all your data in a data frame.
+write simple function call and get access to all your data in a data frame.
 Well, thats what ``AItomic`` does for you. Currently, the library provides
 tools for accessing your NMR data stored in a `NOMAD NMR
 <https://www.nomad-nmr.uk>`_ server.
