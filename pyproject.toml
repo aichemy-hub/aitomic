@@ -30,7 +30,6 @@ dev = [
   "sphinx-copybutton",
   "furo",
   "pymongo>=4.10.1",
-  "bson>=0.5.10",
 ]
 
 [project.urls]
