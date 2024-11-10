@@ -49,6 +49,8 @@ jobs:
     runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v4
+        with:
+          lfs: true
       - uses: actions/checkout@v4
         with:
           repository: lukasturcani/nomad-server
@@ -57,8 +59,7 @@ jobs:
       - run: mkdir -p nomad-server/datastore
       - uses: hoverkraft-tech/compose-action@v2.0.2
         with:
-          cwd: nomad-server
-          compose-file: "./docker-compose.yaml"
+          compose-file: "nomad-server/docker-compose.yaml"
       - uses: astral-sh/setup-uv@v3
         with: 
           enable-cache: true
