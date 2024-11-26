@@ -52,5 +52,5 @@ build:
 
 # Populate a MongoDB database with test data
 init_nomad_nmr_test_db nomad-datastore mongo-uri="mongodb://localhost:27017":
-  uv run --script dev/init_nomad_nmr_test_db.py \
+  uv run dev/init_nomad_nmr_test_db.py \
     {{mongo-uri}} {{nomad-datastore}} dev/nmr-data
