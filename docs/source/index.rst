@@ -14,6 +14,8 @@ Welcome to aitomic's documentation!
   NOMAD NMR <_autosummary/aitomic.nomad_nmr>
   Modules <modules>
 
+GitHub: https://github.com/aichemy-hub/aitomic
+
 ``aitomic`` is a Python library developed by the `AIchemy Hub
 <https://aichemy.ac.uk>`_ for making AI in chemistry simple. As a chemical
 researcher, you likely do not want to spend your time thinking about how to

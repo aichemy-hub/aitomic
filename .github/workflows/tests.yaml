@@ -11,7 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
-        with: 
+        with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - uses: actions/setup-python@v5
@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
-        with: 
+        with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - uses: actions/setup-python@v5
@@ -37,7 +37,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v3
-        with: 
+        with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - uses: actions/setup-python@v5
@@ -61,7 +61,7 @@ jobs:
         with:
           compose-file: "nomad-server/docker-compose.yaml"
       - uses: astral-sh/setup-uv@v3
-        with: 
+        with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - uses: actions/setup-python@v5
@@ -69,7 +69,7 @@ jobs:
           python-version-file: "pyproject.toml"
       - run: uv sync --all-extras --dev
       - run:
-          uv run --script dev/init_nomad_nmr_test_db.py
+          uv run dev/init_nomad_nmr_test_db.py
             mongodb://localhost:27017
             nomad-server/datastore
             dev/nmr-data
@@ -90,7 +90,7 @@ jobs:
         with:
           compose-file: "nomad-server/docker-compose.yaml"
       - uses: astral-sh/setup-uv@v3
-        with: 
+        with:
           enable-cache: true
           cache-dependency-glob: "uv.lock"
       - uses: actions/setup-python@v5
@@ -98,7 +98,7 @@ jobs:
           python-version-file: "pyproject.toml"
       - run: uv sync --all-extras --dev
       - run:
-          uv run --script dev/init_nomad_nmr_test_db.py
+          uv run dev/init_nomad_nmr_test_db.py
             mongodb://localhost:27017
             nomad-server/datastore
             dev/nmr-data
