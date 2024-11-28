@@ -1,4 +1,5 @@
 :Docs: https://aitomic.readthedocs.io/en/stable/
+:EPSRC Grant: EP/Y028775/1
 
 aitomic
 =======
