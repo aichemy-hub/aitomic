@@ -67,7 +67,23 @@ Development Notes
 UV
 ~~~
 
-TODO
+This repository uses `uv <https://docs.astral.sh/uv/>`_ to manage the
+development environment. You can install uv by running the following command:
+
+.. code-block:: bash
+
+  $ pip install uv
+
+Once you have uv installed, you can set up the development environment by running
+the following command:
+
+.. code-block:: bash
+
+  $ uv sync --all-extras --dev
+
+From then on, you can run any command using uv with ``uv run``.
+
+See the `uv documentation <https://docs.astral.sh/uv/>`_ for more information.
 
 Git LFS
 ~~~~~~~
@@ -88,13 +104,17 @@ repository <https://github.com/nomad-nmr/nomad-server?tab=readme-ov-file#set-up-
 Once you have the server running, you must initialize the test database by
 running the following command:
 
-``uv run dev/init_nomad_nmr_test_db.py mongodb://localhost:27017 <PARENT_PATH>/nomad-server/datastore dev/nmr-data``
+.. code-block:: bash
+
+  $ uv run dev/init_nomad_nmr_test_db.py mongodb://localhost:27017 <PARENT_PATH>/nomad-server/datastore dev/nmr-data
 
 Where ``<PARENT_PATH>`` is the path to the NOMAD NMR server repository.
 
 You can then run the tests by running the following command:
 
-``uv run pytest --cov=src --cov-report term-missing``
+.. code-block:: bash
+
+  $ uv run pytest --cov=src --cov-report term-missing
 
 Documentation
 ~~~~~~~~~~~~~
