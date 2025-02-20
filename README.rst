@@ -59,3 +59,44 @@ You can install ``aitomic`` via pip:
 .. code-block:: bash
 
   $ pip install aitomic
+
+
+Development Notes
+-----------------
+
+UV
+~~~
+
+TODO
+
+Git LFS
+~~~~~~~
+
+This repository uses Git LFS to store large files. If you are cloning the
+repository, make sure to have Git LFS installed. You can find more information
+about Git LFS in the `official documentation
+<https://git-lfs.github.com>`_.
+
+Unit Tests
+~~~~~~~~~~
+
+The unit tests are written using `pytest <https://docs.pytest.org/en/stable/>`_.
+To run the tests, you must have a local NOMAD NMR server running. You can
+install the server by following the instructions in the `NOMAD NMR
+repository <https://github.com/nomad-nmr/nomad-server?tab=readme-ov-file#set-up-for-development>`_.
+
+Once you have the server running, you must initialize the test database by
+running the following command:
+
+`uv run dev/init_nomad_nmr_test_db.py mongodb://localhost:27017 <PARENT_PATH>/nomad-server/datastore dev/nmr-data`
+
+Where ``<PARENT_PATH>`` is the path to the NOMAD NMR server repository.
+
+You can then run the tests by running the following command:
+
+`uv run pytest --cov=src --cov-report term-missing`
+
+Documentation
+~~~~~~~~~~~~~
+
+The documentation is built using `Sphinx <https://www.sphinx-doc.org/en/master/>`_.
