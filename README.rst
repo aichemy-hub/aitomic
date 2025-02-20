@@ -88,13 +88,13 @@ repository <https://github.com/nomad-nmr/nomad-server?tab=readme-ov-file#set-up-
 Once you have the server running, you must initialize the test database by
 running the following command:
 
-`uv run dev/init_nomad_nmr_test_db.py mongodb://localhost:27017 <PARENT_PATH>/nomad-server/datastore dev/nmr-data`
+``uv run dev/init_nomad_nmr_test_db.py mongodb://localhost:27017 <PARENT_PATH>/nomad-server/datastore dev/nmr-data``
 
 Where ``<PARENT_PATH>`` is the path to the NOMAD NMR server repository.
 
 You can then run the tests by running the following command:
 
-`uv run pytest --cov=src --cov-report term-missing`
+``uv run pytest --cov=src --cov-report term-missing``
 
 Documentation
 ~~~~~~~~~~~~~
