@@ -1,4 +1,3 @@
-import logging
 from collections.abc import Iterator
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
@@ -7,7 +6,7 @@ import polars as pl
 import requests
 from pydantic import BaseModel, Field, ValidationError
 
-logger = logging.getLogger(__name__)
+from aitomic.aitomic_logging import logger
 
 
 class AuthResponse(BaseModel):
