@@ -1,10 +1,13 @@
+import logging
 from collections.abc import Iterator
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime, timedelta
 
 import polars as pl
 import requests
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationError
+
+logger = logging.getLogger(__name__)
 
 
 class AuthResponse(BaseModel):
@@ -518,14 +521,26 @@ class Client:
         )
         response.raise_for_status()
 
+        experiments: list[AutoExperiment] = []
+        for experiment in response.json():
+            try:
+                experiments.append(
+                    AutoExperimentResponse.model_validate(
+                        experiment
+                    ).to_auto_experiment()
+                )
+
+            except ValidationError as e:
+                logger.warning(
+                    "Validation error for experiment with ID %s: %s",
+                    experiment.get("id", "unknown"),
+                    e,
+                )
+        # Create an AutoExperiments object with the current client instance
+        # and the list of validated experiments.
         return AutoExperiments(
             client=self,
-            inner=[
-                AutoExperimentResponse.model_validate(
-                    experiment
-                ).to_auto_experiment()
-                for experiment in response.json()
-            ],
+            inner=experiments,
         )
 
     def users(self) -> Users:
