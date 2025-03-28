@@ -30,6 +30,7 @@ f_format = logging.Formatter(
 c_handler.setFormatter(c_format)
 f_handler.setFormatter(f_format)
 
-# Add handlers to the logger
-logger.addHandler(c_handler)
-logger.addHandler(f_handler)
+# Add handlers to the logger if not already present
+if not logger.handlers:
+    logger.addHandler(c_handler)
+    logger.addHandler(f_handler)
